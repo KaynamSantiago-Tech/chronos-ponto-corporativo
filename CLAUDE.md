@@ -1,58 +1,87 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code working in this repository.
 
 ## Project Overview
 
-**CHRONOS Ponto Corporativo** — A high-fidelity React UI prototype for a Brazilian corporate HR/attendance management system. The entire application lives in a single file: `chronos-ponto-system.jsx`.
+**Midrah Ponto** — Sistema web interno de ponto e controle de acesso da Midrah. Substitui o protótipo visual anterior (`chronos-ponto-system.jsx`, mantido no repo apenas como referência histórica e não deve ser editado).
 
-There is no package.json, build tooling, or bundler. The component is designed to be dropped directly into an existing React application.
+Metas: ~180 usuários no curto prazo, arquitetura preparada para até 1.000. Inclui registro de ponto com geolocalização + selfie e ganchos para futura integração com roleta por API.
 
-## Architecture
+## Stack
 
-### Single-file structure (`chronos-ponto-system.jsx`)
+| Camada | Tecnologia |
+|--------|------------|
+| Frontend | Next.js 15 (App Router) + Tailwind + shadcn/ui |
+| Backend | NestJS 10 + Prisma + passport-jwt |
+| Banco/Auth/Storage | Supabase (Postgres + Auth + Storage) |
+| Deploy | Vercel (web) + Railway (api) |
+| Observability | Sentry |
+| Package manager | pnpm workspaces (Node ≥ 20.11) |
 
-| Lines | Content |
-|-------|---------|
-| 1–32 | SVG icon components (Clock, Users, Shield, BarChart, etc.) |
-| 35–67 | Static mock data arrays: `employees`, `auditEvents`, `approvalRequests` |
-| 68–193 | Mini chart components (`MiniBarChart`, `DonutChart`) + design tokens object `s` |
-| 194+ | Root component `ChronosPontoSystem` (default export) |
+## Monorepo
 
-### Navigation sections (controlled by `activeSection` state)
-`dashboard` · `employee-panel` · `clock` · `employees` · `schedules` · `approvals` · `reports` · `audit` · `biometrics`
+```
+apps/
+  web/           # Next.js — UI e Supabase Auth client
+  api/           # NestJS — regras de negócio, validação JWT, Prisma
+packages/
+  shared/        # tipos, enums e zod schemas compartilhados (@midrah/shared)
+docs/
+  ARCHITECTURE.md
+  DATA-MODEL.md
+  CONVENTIONS.md
+  QA-REPORT.md
+.claude/agents/  # definições dos 4 subagents (architecture-lead, frontend-builder, backend-builder, qa-planner)
+```
 
-### State
-All state is managed with `useState` hooks inside the root `ChronosPontoSystem` component — no external state library. ~18 state variables cover authentication, active section, clock registration flow, search/filter, and sidebar toggle.
+## Autenticação
 
-### Styling
-All styles are inline. A central `s` object (around line 175) holds the dark-theme design tokens:
-- Background: `#0a0f1a` → `#111827`
-- Primary: `#2563eb` (blue), Accent: `#06b6d4` (cyan)
-- Success/Warning/Danger: `#10b981` / `#f59e0b` / `#ef4444`
-- Fonts: "DM Sans" (UI), "JetBrains Mono" (monospace)
+Supabase Auth emite JWT (email+senha, reset, convites). NestJS valida a assinatura via JWKS e sincroniza o `auth.users.id` com `colaboradores.auth_user_id`. RLS no Postgres é a segunda linha de defesa para leituras diretas do frontend via `@supabase/supabase-js`.
 
-All UI text is in **Brazilian Portuguese** with `pt-BR` locale for date/time formatting.
+**Perfis:** `admin`, `rh`, `gestor`, `colaborador`.
 
-### Demo credentials (hardcoded)
-| Email | Role |
-|-------|------|
-| `admin@slowmancy.com` | Admin |
-| `rh@slowmancy.com` | HR |
-| `gestor@slowmancy.com` | Manager |
-| `colab@slowmancy.com` | Employee |
+## Convenções
 
-Password for all: `123456`
+- UI e mensagens em **português brasileiro** (`pt-BR`).
+- Nomes de entidades e colunas em português (`colaboradores`, `marcacoes`, `setores`, `unidades`, `cargos`).
+- Tipos TS em inglês; payloads/rotas em português.
+- Datas e horários sempre em `America/Sao_Paulo`, formatados via `date-fns` com locale `pt-BR`.
+- IDs: `uuid` (`gen_random_uuid()`).
+- Soft delete (`deleted_at`) apenas em `colaboradores` e `marcacoes`.
 
-## GitHub Repository
+## Comandos úteis
+
+```bash
+pnpm install
+pnpm dev                                  # sobe web:3000 e api:3333 em paralelo
+pnpm --filter @midrah/api prisma migrate dev
+pnpm --filter @midrah/api prisma db seed
+pnpm typecheck
+pnpm lint
+```
+
+## Agents
+
+Os 4 subagents em `.claude/agents/` dividem o trabalho:
+
+- **architecture-lead** (opus) — arquitetura, modelagem de banco, convenções.
+- **frontend-builder** (sonnet) — Next.js, telas, componentes.
+- **backend-builder** (sonnet) — NestJS, módulos, endpoints, Prisma.
+- **qa-planner** (opus) — auditoria de coerência, riscos, lacunas.
+
+Plano completo: `C:\Users\Usuario\.claude\plans\quero-desenvolver-um-sistema-groovy-knuth.md`.
+
+Após reinício do CLI, a env var `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` (em `~/.claude/settings.json`) habilita Agent Teams nativo — as mesmas definições são reutilizadas como teammates.
+
+## GitHub
 
 **Repo:** https://github.com/KaynamSantiago-Tech/chronos-ponto-corporativo
 **Branch:** master
 
-### Auto-sync
-A `PostToolUse` hook in `.claude/settings.local.json` automatically commits and pushes to GitHub after every `Edit` or `Write` operation. No manual `git push` needed — every file change is synced automatically.
+Hook `PostToolUse` em `.claude/settings.local.json` faz auto-commit + push após cada `Edit`/`Write`.
 
-To push manually:
+Push manual:
 ```bash
 cd "c:/Users/Usuario/Desktop/Projetos Claude Code"
 git add -A && git commit -m "mensagem" && git push origin master

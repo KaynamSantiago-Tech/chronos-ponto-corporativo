@@ -43,3 +43,17 @@ All UI text is in **Brazilian Portuguese** with `pt-BR` locale for date/time for
 | `colab@slowmancy.com` | Employee |
 
 Password for all: `123456`
+
+## GitHub Repository
+
+**Repo:** https://github.com/KaynamSantiago-Tech/chronos-ponto-corporativo
+**Branch:** master
+
+### Auto-sync
+A `PostToolUse` hook in `.claude/settings.local.json` automatically commits and pushes to GitHub after every `Edit` or `Write` operation. No manual `git push` needed — every file change is synced automatically.
+
+To push manually:
+```bash
+cd "c:/Users/Usuario/Desktop/Projetos Claude Code"
+git add -A && git commit -m "mensagem" && git push origin master
+```

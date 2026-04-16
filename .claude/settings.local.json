@@ -2,7 +2,27 @@
   "permissions": {
     "allow": [
       "Bash(git --version)",
-      "Bash(winget install *)"
+      "Bash(winget install *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git init)",
+      "Bash(git diff *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"c:/Users/Usuario/Desktop/Projetos Claude Code\" && export PATH=\"$PATH:/c/Program Files/GitHub CLI\" && git add -A && git diff --cached --quiet || git commit -m \"Auto-update: $(date '+%Y-%m-%d %H:%M:%S')\" && git push origin master",
+            "statusMessage": "Sincronizando com GitHub...",
+            "async": true
+          }
+        ]
+      }
     ]
   }
 }

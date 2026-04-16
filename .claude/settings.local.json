@@ -1,4 +1,5 @@
 {
+  "language": "portuguese",
   "permissions": {
     "allow": [
       "Bash(git --version)",

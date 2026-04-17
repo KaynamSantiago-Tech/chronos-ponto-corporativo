@@ -11,12 +11,10 @@ import type { Request } from "express";
 import jwksRsa, { JwksClient } from "jwks-rsa";
 import { verify, type JwtHeader } from "jsonwebtoken";
 
-import type { PerfilColaborador } from "@midrah/shared";
-
 import type { Env } from "../../config/env.schema";
 import { PrismaService } from "../../prisma/prisma.service";
 import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
-import type { AuthUser } from "../decorators/current-user.decorator";
+import type { RequestUser } from "../decorators/current-user.decorator";
 
 interface JwtPayload {
   sub: string;
@@ -52,21 +50,34 @@ export class JwtAuthGuard implements CanActivate {
     ]);
     if (isPublic) return true;
 
-    const req = ctx.switchToHttp().getRequest<Request & { user?: AuthUser }>();
+    const req = ctx.switchToHttp().getRequest<Request & { user?: RequestUser }>();
     const header = req.headers.authorization;
     if (!header?.startsWith("Bearer ")) {
-      throw new UnauthorizedException({ code: "NO_TOKEN", message: "Bearer token ausente" });
+      throw new UnauthorizedException({
+        code: "NO_TOKEN",
+        message: "Bearer token ausente",
+      });
     }
     const token = header.slice("Bearer ".length);
 
-    const payload = await this.verifyToken(token).catch((err) => {
+    const payload = await this.verifyToken(token).catch((err: Error) => {
       this.logger.warn(`jwt inválido: ${err.message}`);
-      throw new UnauthorizedException({ code: "INVALID_TOKEN", message: "Token inválido" });
+      throw new UnauthorizedException({
+        code: "INVALID_TOKEN",
+        message: "Token inválido",
+      });
     });
 
     const colaborador = await this.prisma.colaborador.findUnique({
       where: { auth_user_id: payload.sub },
-      select: { id: true, perfil: true, ativo: true, deleted_at: true },
+      select: {
+        id: true,
+        perfil: true,
+        email: true,
+        nome: true,
+        ativo: true,
+        deleted_at: true,
+      },
     });
 
     if (!colaborador || !colaborador.ativo || colaborador.deleted_at) {
@@ -77,15 +88,16 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     req.user = {
-      sub: payload.sub,
-      email: payload.email,
+      auth_user_id: payload.sub,
       colaborador_id: colaborador.id,
-      perfil: colaborador.perfil as PerfilColaborador,
+      perfil: colaborador.perfil as RequestUser["perfil"],
+      email: colaborador.email,
+      nome: colaborador.nome,
     };
     return true;
   }
 
-  private async verifyToken(token: string): Promise<JwtPayload> {
+  private verifyToken(token: string): Promise<JwtPayload> {
     const issuer = this.config.get("SUPABASE_JWT_ISSUER", { infer: true });
     return new Promise<JwtPayload>((resolve, reject) => {
       verify(
@@ -94,7 +106,7 @@ export class JwtAuthGuard implements CanActivate {
           this.jwks
             .getSigningKey(header.kid)
             .then((key) => cb(null, key.getPublicKey()))
-            .catch(cb);
+            .catch((err: Error) => cb(err));
         },
         { algorithms: ["RS256", "ES256"], issuer },
         (err, decoded) => {

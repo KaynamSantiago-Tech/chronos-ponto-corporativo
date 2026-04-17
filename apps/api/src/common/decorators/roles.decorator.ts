@@ -1,8 +1,6 @@
 import { SetMetadata } from "@nestjs/common";
 
-import type { PerfilColaborador } from "@midrah/shared";
+export type Perfil = "admin" | "rh" | "gestor" | "colaborador";
 
-export const ROLES_KEY = "perfisPermitidos";
-export const Roles = (
-  ...perfis: PerfilColaborador[]
-): MethodDecorator & ClassDecorator => SetMetadata(ROLES_KEY, perfis);
+export const ROLES_KEY = "roles";
+export const Roles = (...perfis: Perfil[]) => SetMetadata(ROLES_KEY, perfis);

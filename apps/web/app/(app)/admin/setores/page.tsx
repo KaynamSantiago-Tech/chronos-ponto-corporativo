@@ -1,8 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Pencil, Plus } from "lucide-react";
+import { useState } from "react";
 
+import { SetorFormDialog } from "@/components/admin/setor-form-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -17,6 +19,9 @@ interface Setor {
 }
 
 export default function SetoresPage() {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<Setor | null>(null);
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["setores"],
     queryFn: () =>
@@ -25,6 +30,16 @@ export default function SetoresPage() {
       }),
   });
 
+  const openNew = () => {
+    setEditing(null);
+    setDialogOpen(true);
+  };
+
+  const openEdit = (s: Setor) => {
+    setEditing(s);
+    setDialogOpen(true);
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
@@ -32,8 +47,8 @@ export default function SetoresPage() {
           <h1 className="text-2xl font-semibold">Setores</h1>
           <p className="text-sm text-muted-foreground">Divisões dentro de cada unidade.</p>
         </div>
-        <Button disabled>
-          <Plus className="h-4 w-4" /> Novo setor (em breve)
+        <Button onClick={openNew}>
+          <Plus className="h-4 w-4" /> Novo setor
         </Button>
       </div>
 
@@ -59,6 +74,7 @@ export default function SetoresPage() {
                   <TableHead>Nome</TableHead>
                   <TableHead>Unidade</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead className="w-20 text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -69,6 +85,11 @@ export default function SetoresPage() {
                       {s.unidade_nome ?? s.unidade_id}
                     </TableCell>
                     <TableCell>{s.ativo ? "Ativo" : "Inativo"}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="icon" onClick={() => openEdit(s)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -76,6 +97,8 @@ export default function SetoresPage() {
           )}
         </CardContent>
       </Card>
+
+      <SetorFormDialog open={dialogOpen} onOpenChange={setDialogOpen} setor={editing} />
     </div>
   );
 }

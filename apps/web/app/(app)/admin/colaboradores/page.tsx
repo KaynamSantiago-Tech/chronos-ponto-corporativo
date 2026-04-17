@@ -2,14 +2,19 @@
 
 import type { Colaborador, Paginated } from "@midrah/shared";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, UserPlus } from "lucide-react";
+import { Loader2, Pencil, UserPlus } from "lucide-react";
+import { useState } from "react";
 
+import { ColaboradorFormDialog } from "@/components/admin/colaborador-form-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { apiFetch } from "@/lib/api";
 
 export default function ColaboradoresPage() {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<Colaborador | null>(null);
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["colaboradores", { page: 1 }],
     queryFn: () =>
@@ -17,6 +22,16 @@ export default function ColaboradoresPage() {
         query: { page: 1, page_size: 50 },
       }),
   });
+
+  const openNew = () => {
+    setEditing(null);
+    setDialogOpen(true);
+  };
+
+  const openEdit = (c: Colaborador) => {
+    setEditing(c);
+    setDialogOpen(true);
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -27,8 +42,8 @@ export default function ColaboradoresPage() {
             Gerencie a base de colaboradores e envie convites.
           </p>
         </div>
-        <Button disabled>
-          <UserPlus className="h-4 w-4" /> Novo (em breve)
+        <Button onClick={openNew}>
+          <UserPlus className="h-4 w-4" /> Novo colaborador
         </Button>
       </div>
 
@@ -58,6 +73,7 @@ export default function ColaboradoresPage() {
                   <TableHead>Email</TableHead>
                   <TableHead>Perfil</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead className="w-20 text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -68,6 +84,11 @@ export default function ColaboradoresPage() {
                     <TableCell className="text-xs">{c.email}</TableCell>
                     <TableCell className="capitalize">{c.perfil}</TableCell>
                     <TableCell>{c.ativo ? "Ativo" : "Inativo"}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="icon" onClick={() => openEdit(c)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -75,6 +96,12 @@ export default function ColaboradoresPage() {
           )}
         </CardContent>
       </Card>
+
+      <ColaboradorFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        colaborador={editing}
+      />
     </div>
   );
 }

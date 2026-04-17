@@ -16,6 +16,7 @@ import { HealthModule } from "./modules/health/health.module";
 import { LogsModule } from "./modules/logs/logs.module";
 import { MarcacoesModule } from "./modules/marcacoes/marcacoes.module";
 import { PrismaModule } from "./prisma/prisma.module";
+import { SupabaseModule } from "./common/supabase/supabase.module";
 import { RoletaModule } from "./modules/roleta/roleta.module";
 import { SetoresModule } from "./modules/setores/setores.module";
 import { UnidadesModule } from "./modules/unidades/unidades.module";

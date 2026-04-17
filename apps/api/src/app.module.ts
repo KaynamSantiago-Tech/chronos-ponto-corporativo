@@ -43,6 +43,7 @@ import { UnidadesModule } from "./modules/unidades/unidades.module";
       { name: "marcacao", ttl: 10_000, limit: 1 },
     ]),
     PrismaModule,
+    SupabaseModule,
     AuthModule,
     HealthModule,
     ColaboradoresModule,

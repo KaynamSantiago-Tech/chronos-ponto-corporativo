@@ -1,8 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Pencil, Plus } from "lucide-react";
+import { useState } from "react";
 
+import { UnidadeFormDialog } from "@/components/admin/unidade-form-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -16,6 +18,9 @@ interface Unidade {
 }
 
 export default function UnidadesPage() {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState<Unidade | null>(null);
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["unidades"],
     queryFn: () =>
@@ -24,6 +29,16 @@ export default function UnidadesPage() {
       }),
   });
 
+  const openNew = () => {
+    setEditing(null);
+    setDialogOpen(true);
+  };
+
+  const openEdit = (u: Unidade) => {
+    setEditing(u);
+    setDialogOpen(true);
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
@@ -31,8 +46,8 @@ export default function UnidadesPage() {
           <h1 className="text-2xl font-semibold">Unidades</h1>
           <p className="text-sm text-muted-foreground">Filiais e localizações da empresa.</p>
         </div>
-        <Button disabled>
-          <Plus className="h-4 w-4" /> Nova unidade (em breve)
+        <Button onClick={openNew}>
+          <Plus className="h-4 w-4" /> Nova unidade
         </Button>
       </div>
 
@@ -58,6 +73,7 @@ export default function UnidadesPage() {
                   <TableHead>Nome</TableHead>
                   <TableHead>Endereço</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead className="w-20 text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -68,6 +84,11 @@ export default function UnidadesPage() {
                       {u.endereco ?? "—"}
                     </TableCell>
                     <TableCell>{u.ativo ? "Ativa" : "Inativa"}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="icon" onClick={() => openEdit(u)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -75,6 +96,8 @@ export default function UnidadesPage() {
           )}
         </CardContent>
       </Card>
+
+      <UnidadeFormDialog open={dialogOpen} onOpenChange={setDialogOpen} unidade={editing} />
     </div>
   );
 }

@@ -1,29 +1,27 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Controller, Get, Headers, Post } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { IsUUID } from "class-validator";
 
 import { CurrentUser, type RequestUser } from "../../common/decorators/current-user.decorator";
+import { Public } from "../../common/decorators/public.decorator";
 import { AuthService } from "./auth.service";
 
-class SyncDto {
-  @IsUUID()
-  auth_user_id!: string;
-}
-
-@ApiBearerAuth()
 @ApiTags("auth")
 @Controller("auth")
 export class AuthController {
   constructor(private readonly service: AuthService) {}
 
+  /**
+   * Primeira chamada após login no Supabase. Valida o JWT, localiza o
+   * colaborador por email e grava o vínculo `auth_user_id` se ainda não existir.
+   * A partir daqui, as demais rotas autenticadas passam a funcionar.
+   */
+  @Public()
   @Post("sync")
-  sync(@CurrentUser() user: RequestUser, @Body() _body: SyncDto) {
-    // O JwtAuthGuard já validou o token e vinculou o colaborador.
-    // Esse endpoint existe para o frontend chamar logo após o login Supabase
-    // e receber o perfil consolidado.
-    return this.service.getMe(user.colaborador_id);
+  sync(@Headers("authorization") authorization?: string) {
+    return this.service.sync(authorization);
   }
 
+  @ApiBearerAuth()
   @Get("me")
   me(@CurrentUser() user: RequestUser) {
     return this.service.getMe(user.colaborador_id);

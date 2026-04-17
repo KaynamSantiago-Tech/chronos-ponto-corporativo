@@ -1,16 +1,35 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { IsBoolean, IsIn, IsOptional, IsUUID } from "class-validator";
 
+import type { Perfil } from "../../common/decorators/roles.decorator";
 import { Roles } from "../../common/decorators/roles.decorator";
 import { PaginationDto } from "../../common/dto/pagination.dto";
 import { ColaboradoresService } from "./colaboradores.service";
 import {
   AtualizarColaboradorDto,
   CriarColaboradorDto,
-  ListarColaboradoresDto,
 } from "./dto/colaborador.dto";
 
-class ListarDto extends PaginationDto {}
+const PERFIS: Perfil[] = ["admin", "rh", "gestor", "colaborador"];
+
+class ListarColaboradoresQueryDto extends PaginationDto {
+  @IsOptional()
+  @IsUUID()
+  setor_id?: string;
+
+  @IsOptional()
+  @IsUUID()
+  unidade_id?: string;
+
+  @IsOptional()
+  @IsIn(PERFIS)
+  perfil?: Perfil;
+
+  @IsOptional()
+  @IsBoolean()
+  ativo?: boolean;
+}
 
 @ApiBearerAuth()
 @ApiTags("colaboradores")
@@ -20,8 +39,13 @@ export class ColaboradoresController {
   constructor(private readonly service: ColaboradoresService) {}
 
   @Get()
-  listar(@Query() page: ListarDto, @Query() filtros: ListarColaboradoresDto) {
-    return this.service.listar(page.page, page.page_size, filtros);
+  listar(@Query() q: ListarColaboradoresQueryDto) {
+    return this.service.listar(q.page, q.page_size, {
+      setor_id: q.setor_id,
+      unidade_id: q.unidade_id,
+      perfil: q.perfil,
+      ativo: q.ativo,
+    });
   }
 
   @Get(":id")

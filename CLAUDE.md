@@ -63,12 +63,21 @@ pnpm lint
 
 ## Agents
 
-Os 4 subagents em `.claude/agents/` dividem o trabalho:
+Operamos com 8 agentes em `.claude/agents/`. Os 4 principais conduzem o fluxo; os 4 especializados entram quando a tarefa exige sua área.
 
-- **architecture-lead** (opus) — arquitetura, modelagem de banco, convenções.
-- **frontend-builder** (sonnet) — Next.js, telas, componentes.
-- **backend-builder** (sonnet) — NestJS, módulos, endpoints, Prisma.
-- **qa-planner** (opus) — auditoria de coerência, riscos, lacunas.
+**Principais (núcleo de execução):**
+- **architecture-lead** (opus) — arquitetura, modelagem, convenções, plano por etapas.
+- **frontend-builder** (sonnet) — Next.js, telas, componentes, navegação.
+- **backend-builder** (sonnet) — NestJS, módulos, endpoints, Prisma, regras.
+- **qa-planner** (opus) — auditoria de coerência, riscos, lacunas, readiness.
+
+**Especializados (apoio sob demanda):**
+- **integration-specialist** (sonnet) — roleta, webhooks, adapters, contingência de hardware/API externa.
+- **security-reviewer** (opus) — auth, RBAC, upload de evidências, LGPD, proteção contra abuso.
+- **database-specialist** (sonnet) — índices, migrations, RLS, integridade, performance.
+- **devops-deploy** (sonnet) — Vercel/Railway, envs, Sentry, backups, readiness operacional.
+
+Regras: não acionar todos em tarefas pequenas; consolidar decisões; envolver qa-planner na revisão final quando houver risco estrutural.
 
 Plano completo: `C:\Users\Usuario\.claude\plans\quero-desenvolver-um-sistema-groovy-knuth.md`.
 

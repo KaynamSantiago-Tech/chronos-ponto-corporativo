@@ -32,4 +32,11 @@ export class EvidenciasController {
   ) {
     return this.service.upload(user.colaborador_id, arquivo);
   }
+
+  @Get("signed-url")
+  @Roles("admin", "rh", "gestor")
+  signedUrl(@Query() query: SignedUrlQueryDto) {
+    const seconds = query.seconds ? Math.min(3600, Math.max(60, Number(query.seconds))) : 3600;
+    return this.service.signedUrl(query.path, seconds);
+  }
 }

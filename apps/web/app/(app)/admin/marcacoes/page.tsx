@@ -19,7 +19,8 @@ import { Select } from "@/components/ui/select";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
-import { apiFetch, ApiRequestError } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
+import { formatarErroApi } from "@/lib/api-errors";
 import { baixarCsv, gerarCsv } from "@/lib/csv";
 import { formatDateTimePtBr } from "@/lib/format";
 

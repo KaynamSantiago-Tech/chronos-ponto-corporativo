@@ -36,6 +36,14 @@ export class ColaboradoresService {
       perfil: filtros.perfil,
       ativo: filtros.ativo,
     };
+    const termo = filtros.busca?.trim();
+    if (termo) {
+      where.OR = [
+        { nome: { contains: termo, mode: "insensitive" } },
+        { matricula: { contains: termo, mode: "insensitive" } },
+        { email: { contains: termo, mode: "insensitive" } },
+      ];
+    }
     const [items, total] = await this.prisma.$transaction([
       this.prisma.colaborador.findMany({
         where,

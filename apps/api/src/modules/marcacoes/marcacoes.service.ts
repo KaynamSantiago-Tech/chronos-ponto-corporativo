@@ -114,7 +114,16 @@ export class MarcacoesService {
     page: number,
     pageSize: number,
     filtros: ListarMarcacoesDto,
+    escopo?: { perfil: "admin" | "rh" | "gestor" | "colaborador"; setor_id: string },
   ): Promise<Paginated<unknown>> {
+    // Gestor só enxerga marcações do próprio setor; admin/rh veem tudo.
+    const setorEfetivo =
+      escopo?.perfil === "gestor" ? escopo.setor_id : filtros.setor_id;
+
+    const colaboradorFiltro: Prisma.ColaboradorWhereInput = {};
+    if (setorEfetivo) colaboradorFiltro.setor_id = setorEfetivo;
+    if (filtros.unidade_id) colaboradorFiltro.unidade_id = filtros.unidade_id;
+
     const where: Prisma.MarcacaoWhereInput = {
       colaborador_id: filtros.colaborador_id,
       tipo: filtros.tipo,
@@ -122,13 +131,7 @@ export class MarcacoesService {
         gte: filtros.inicio ? new Date(filtros.inicio) : undefined,
         lte: filtros.fim ? new Date(filtros.fim) : undefined,
       },
-      colaborador:
-        filtros.setor_id || filtros.unidade_id
-          ? {
-              setor_id: filtros.setor_id,
-              unidade_id: filtros.unidade_id,
-            }
-          : undefined,
+      colaborador: Object.keys(colaboradorFiltro).length > 0 ? colaboradorFiltro : undefined,
     };
     const [rows, total] = await this.prisma.$transaction([
       this.prisma.marcacao.findMany({

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, ForbiddenException, Get, Param, ParseUUIDPipe, Patch, Post, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { IsBoolean, IsIn, IsOptional, IsUUID } from "class-validator";
+import { IsBoolean, IsIn, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
 
 import { CurrentUser, type RequestUser } from "../../common/decorators/current-user.decorator";
 import type { Perfil } from "../../common/decorators/roles.decorator";

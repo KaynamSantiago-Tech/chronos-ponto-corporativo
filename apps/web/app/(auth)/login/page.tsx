@@ -118,6 +118,13 @@ export default function LoginPage() {
               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               Entrar
             </Button>
+
+            <Link
+              href="/esqueci-senha"
+              className="text-center text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              Esqueci minha senha
+            </Link>
           </form>
         </CardContent>
       </Card>

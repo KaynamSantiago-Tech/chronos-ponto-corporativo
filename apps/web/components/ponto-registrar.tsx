@@ -3,11 +3,12 @@
 import { TipoMarcacao, type Marcacao } from "@midrah/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Camera, Loader2, LogIn, LogOut, PauseCircle, PlayCircle } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/toast";
+import { useMarcacoesMe } from "@/hooks/use-marcacoes-me";
 import {
   abrirCameraFrontal,
   capturarSelfieJpeg,

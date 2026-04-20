@@ -1,6 +1,9 @@
+import "./instrument";
+
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import * as Sentry from "@sentry/node";
 import helmet from "helmet";
 import { Logger } from "nestjs-pino";
 

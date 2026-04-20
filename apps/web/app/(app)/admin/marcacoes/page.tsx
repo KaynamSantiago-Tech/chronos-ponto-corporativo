@@ -195,9 +195,10 @@ export default function AdminMarcacoesPage() {
               Erro: {(error as Error).message}
             </div>
           ) : items.length === 0 ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">
-              Nenhuma marcação encontrada.
-            </div>
+            <EmptyState
+              title="Nenhuma marcação encontrada"
+              description="Tente ampliar o período ou limpar os filtros."
+            />
           ) : (
             <>
               <Table>

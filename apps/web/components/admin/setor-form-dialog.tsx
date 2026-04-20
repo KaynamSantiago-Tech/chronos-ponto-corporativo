@@ -88,8 +88,8 @@ export function SetorFormDialog({ open, onOpenChange, setor }: SetorFormDialogPr
       onOpenChange(false);
     },
     onError: (err: unknown) => {
-      const msg = err instanceof ApiRequestError ? err.message : "Erro desconhecido";
-      toast.error("Falha ao salvar setor", msg);
+      const amigavel = formatarErroApi(err, "Falha ao salvar setor");
+      toast.error(amigavel.titulo, amigavel.descricao);
     },
   });
 

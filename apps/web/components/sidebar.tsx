@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BarChart3,
   Building2,
   Clock4,
   FileClock,

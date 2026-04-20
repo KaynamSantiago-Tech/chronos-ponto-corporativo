@@ -2,7 +2,7 @@
 
 import type { Marcacao, Paginated, TipoMarcacao } from "@midrah/shared";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 import { SelfiePreviewButton } from "@/components/admin/selfie-preview-button";
@@ -11,7 +11,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { apiFetch } from "@/lib/api";
+import { useToast } from "@/components/ui/toast";
+import { apiFetch, ApiRequestError } from "@/lib/api";
+import { baixarCsv, gerarCsv } from "@/lib/csv";
 import { formatDateTimePtBr } from "@/lib/format";
 
 const TIPO_LABEL: Record<TipoMarcacao, string> = {

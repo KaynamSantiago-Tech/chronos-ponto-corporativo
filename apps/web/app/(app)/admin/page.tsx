@@ -9,7 +9,7 @@ import { useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiFetch } from "@/lib/api";
 import { formatTimePtBr } from "@/lib/format";
-import { inicioDoDia, rotuloTipo } from "@/lib/horas";
+import { inicioDoDia } from "@/lib/horas";
 
 const HORA_LIMITE_ATRASO = 9;
 

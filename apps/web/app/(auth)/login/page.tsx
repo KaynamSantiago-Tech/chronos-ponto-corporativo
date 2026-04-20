@@ -38,6 +38,16 @@ export default function LoginPage() {
     defaultValues: { email: "", senha: "" },
   });
 
+  useEffect(() => {
+    if (searchParams.get("sessao") === "expirada") {
+      toast.info(
+        "Sessão encerrada",
+        "Sua sessão expirou ou foi revogada. Entre novamente.",
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function onSubmit(data: LoginFormData) {
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,

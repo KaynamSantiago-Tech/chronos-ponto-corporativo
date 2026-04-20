@@ -112,10 +112,12 @@ Erros esperados em `/auth/sync`:
 
 | Perfil        | Pode                                                                 |
 | ------------- | -------------------------------------------------------------------- |
-| `admin`       | tudo, incluindo logs de auditoria e export CSV                       |
-| `rh`          | CRUDs de cargos/setores/unidades/colaboradores; ver todas marcações  |
+| `admin`       | tudo, incluindo logs de auditoria, export CSV e registro manual      |
+| `rh`          | CRUDs completos; ver todas marcações; registrar marcação manual      |
 | `gestor`      | ver colaboradores e marcações **apenas do próprio setor**; não edita |
 | `colaborador` | registrar próprio ponto; ver próprio histórico e selfies próprias    |
+
+**Registro manual (admin/RH):** Para casos onde câmera ou GPS falham, admin/RH pode registrar marcação via `POST /marcacoes/manual` ou botão "Registro manual" em `/admin/marcacoes`. Justificativa é obrigatória (mínimo 10 caracteres) e a marcação fica com `origem = "manual"` — filtrável e auditada.
 
 Frontend aplica `PermissionGate`; backend aplica `@Roles()` + `JwtAuthGuard` + RLS no Postgres como defesa em profundidade.
 

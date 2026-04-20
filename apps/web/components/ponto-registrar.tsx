@@ -173,7 +173,8 @@ export default function PontoRegistrar() {
       });
     },
     onSuccess: (marcacao) => {
-      toast.success("Ponto registrado", `Tipo: ${marcacao.tipo}`);
+      const label = ROTULO_TIPO[marcacao.tipo as TipoMarcacao] ?? marcacao.tipo;
+      toast.success("Ponto registrado", `${label} às ${formatHora(marcacao.registrada_em)}`);
       queryClient.invalidateQueries({ queryKey: ["marcacoes", "me"] });
       pararCamera();
     },

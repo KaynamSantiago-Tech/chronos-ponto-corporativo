@@ -121,9 +121,10 @@ export default function LogsPage() {
                 Erro: {(error as Error).message}
               </div>
             ) : items.length === 0 ? (
-              <div className="py-8 text-center text-sm text-muted-foreground">
-                Nenhum evento registrado.
-              </div>
+              <EmptyState
+                title="Nenhum evento registrado"
+                description="A trilha ainda está vazia neste recorte."
+              />
             ) : (
               <>
                 <Table>

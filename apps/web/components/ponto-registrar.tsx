@@ -210,6 +210,22 @@ export default function PontoRegistrar() {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
+        <div className="rounded-md border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+          {hojeQuery.isLoading ? (
+            <span>Carregando status do dia…</span>
+          ) : ultimaHoje ? (
+            <span>
+              Último registro hoje:{" "}
+              <strong className="text-foreground">
+                {ROTULO_TIPO[ultimaHoje.tipo as TipoMarcacao] ?? ultimaHoje.tipo}
+              </strong>{" "}
+              às <strong className="text-foreground">{formatHora(ultimaHoje.registrada_em)}</strong>.
+            </span>
+          ) : (
+            <span>Nenhum registro hoje — comece pela <strong className="text-foreground">Entrada</strong>.</span>
+          )}
+        </div>
+
         <div className="relative overflow-hidden rounded-lg border border-border bg-black/30 aspect-[4/3]">
           <video
             ref={videoRef}

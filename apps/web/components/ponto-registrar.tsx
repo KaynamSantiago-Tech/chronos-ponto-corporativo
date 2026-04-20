@@ -122,7 +122,7 @@ export default function PontoRegistrar() {
         raw: true,
       });
 
-      // 4. registrar marcação
+      // 4. registrar marcação (evidencia_url guarda o path relativo do Storage)
       return apiFetch<Marcacao>("/marcacoes", {
         method: "POST",
         body: {
@@ -130,7 +130,7 @@ export default function PontoRegistrar() {
           latitude: coords.latitude,
           longitude: coords.longitude,
           precisao_m: coords.precisao_m,
-          evidencia_id: upload.evidencia_id,
+          evidencia_url: upload.path,
         },
       });
     },

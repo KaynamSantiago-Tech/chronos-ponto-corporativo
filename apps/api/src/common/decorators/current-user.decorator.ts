@@ -6,6 +6,8 @@ export interface RequestUser {
   perfil: "admin" | "rh" | "gestor" | "colaborador";
   email: string;
   nome: string;
+  setor_id: string;
+  unidade_id: string;
 }
 
 export const CurrentUser = createParamDecorator(

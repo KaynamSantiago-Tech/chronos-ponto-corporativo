@@ -125,6 +125,12 @@ export default function ColaboradoresPage() {
               </TableBody>
             </Table>
           )}
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            total={total}
+          />
         </CardContent>
       </Card>
 

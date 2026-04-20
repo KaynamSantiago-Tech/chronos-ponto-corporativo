@@ -35,9 +35,8 @@ export function SelfiePreviewButton({ path, label }: SelfiePreviewButtonProps) {
       });
       setUrl(res.signed_url);
     } catch (err) {
-      const msg =
-        err instanceof ApiRequestError ? err.message : "Erro ao gerar URL";
-      toast.error("Não foi possível carregar evidência", msg);
+      const amigavel = formatarErroApi(err, "Não foi possível carregar evidência");
+      toast.error(amigavel.titulo, amigavel.descricao);
       setOpen(false);
     } finally {
       setLoading(false);

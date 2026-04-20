@@ -103,6 +103,32 @@ export default function AdminMarcacoesPage() {
     [colaboradoresQuery.data],
   );
 
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (inicio) params.set("inicio", inicio);
+    if (fim) params.set("fim", fim);
+    if (colaboradorId) params.set("colaborador_id", colaboradorId);
+    if (colaboradorBusca) params.set("colaborador_busca", colaboradorBusca);
+    if (unidadeId) params.set("unidade_id", unidadeId);
+    if (setorId) params.set("setor_id", setorId);
+    if (tipo) params.set("tipo", tipo);
+    if (page > 1) params.set("page", String(page));
+    const qs = params.toString();
+    const target = qs ? `${pathname}?${qs}` : pathname;
+    router.replace(target, { scroll: false });
+  }, [
+    inicio,
+    fim,
+    colaboradorId,
+    colaboradorBusca,
+    unidadeId,
+    setorId,
+    tipo,
+    page,
+    pathname,
+    router,
+  ]);
+
   const filtrosIso = {
     inicio: inicio ? new Date(inicio).toISOString() : undefined,
     fim: fim ? new Date(fim).toISOString() : undefined,

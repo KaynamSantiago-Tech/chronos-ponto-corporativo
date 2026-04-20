@@ -51,13 +51,20 @@ export class MarcacoesController {
 
   @Roles("admin", "rh", "gestor")
   @Get()
-  listar(@Query() page: PaginationDto, @Query() filtros: ListarMarcacoesDto) {
-    return this.service.listar(page.page, page.page_size, filtros);
+  listar(
+    @CurrentUser() user: RequestUser,
+    @Query() page: PaginationDto,
+    @Query() filtros: ListarMarcacoesDto,
+  ) {
+    return this.service.listar(page.page, page.page_size, filtros, {
+      perfil: user.perfil,
+      setor_id: user.setor_id,
+    });
   }
 
   @Roles("admin", "rh", "gestor")
   @Get(":id")
-  obter(@Param("id", new ParseUUIDPipe()) id: string) {
-    return this.service.obter(id);
+  obter(@CurrentUser() user: RequestUser, @Param("id", new ParseUUIDPipe()) id: string) {
+    return this.service.obter(id, { perfil: user.perfil, setor_id: user.setor_id });
   }
 }

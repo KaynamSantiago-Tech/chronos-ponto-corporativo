@@ -31,39 +31,174 @@ function makeService(ultimoTipo: string | null, extra: Partial<PrismaMock> = {})
 
 describe("MarcacoesService.validarSequencia", () => {
   it("permite entrada quando não há marcação hoje", async () => {
-    const s = makeService(null);
-    await expect(s.validarSequencia("c1", "entrada")).resolves.toBeUndefined();
+    const { service } = makeService(null);
+    await expect(service.validarSequencia("c1", "entrada")).resolves.toBeUndefined();
   });
 
   it("bloqueia saida sem entrada no dia", async () => {
-    const s = makeService(null);
-    await expect(s.validarSequencia("c1", "saida")).rejects.toBeInstanceOf(ConflictException);
+    const { service } = makeService(null);
+    await expect(service.validarSequencia("c1", "saida")).rejects.toBeInstanceOf(
+      ConflictException,
+    );
   });
 
   it("bloqueia nova entrada após entrada", async () => {
-    const s = makeService("entrada");
-    await expect(s.validarSequencia("c1", "entrada")).rejects.toBeInstanceOf(ConflictException);
+    const { service } = makeService("entrada");
+    await expect(service.validarSequencia("c1", "entrada")).rejects.toBeInstanceOf(
+      ConflictException,
+    );
   });
 
   it("permite pausa_inicio após entrada", async () => {
-    const s = makeService("entrada");
-    await expect(s.validarSequencia("c1", "pausa_inicio")).resolves.toBeUndefined();
+    const { service } = makeService("entrada");
+    await expect(service.validarSequencia("c1", "pausa_inicio")).resolves.toBeUndefined();
   });
 
   it("exige pausa_fim depois de pausa_inicio", async () => {
-    const s = makeService("pausa_inicio");
-    await expect(s.validarSequencia("c1", "saida")).rejects.toBeInstanceOf(ConflictException);
-    await expect(s.validarSequencia("c1", "pausa_fim")).resolves.toBeUndefined();
+    const { service } = makeService("pausa_inicio");
+    await expect(service.validarSequencia("c1", "saida")).rejects.toBeInstanceOf(
+      ConflictException,
+    );
+    await expect(service.validarSequencia("c1", "pausa_fim")).resolves.toBeUndefined();
   });
 
   it("permite saida após pausa_fim", async () => {
-    const s = makeService("pausa_fim");
-    await expect(s.validarSequencia("c1", "saida")).resolves.toBeUndefined();
+    const { service } = makeService("pausa_fim");
+    await expect(service.validarSequencia("c1", "saida")).resolves.toBeUndefined();
   });
 
   it("bloqueia qualquer coisa após saida", async () => {
-    const s = makeService("saida");
-    await expect(s.validarSequencia("c1", "entrada")).rejects.toBeInstanceOf(ConflictException);
-    await expect(s.validarSequencia("c1", "pausa_inicio")).rejects.toBeInstanceOf(ConflictException);
+    const { service } = makeService("saida");
+    await expect(service.validarSequencia("c1", "entrada")).rejects.toBeInstanceOf(
+      ConflictException,
+    );
+    await expect(service.validarSequencia("c1", "pausa_inicio")).rejects.toBeInstanceOf(
+      ConflictException,
+    );
+  });
+});
+
+describe("MarcacoesService.registrarManual", () => {
+  it("cria marcação com origem='manual' e observação prefixada com o ator", async () => {
+    const create = vi.fn().mockResolvedValue({ id: "m1" });
+    const findColab = vi.fn().mockResolvedValue({ id: "c1", ativo: true });
+    const { service } = makeService(null, {
+      marcacao: { findFirst: vi.fn(), create },
+      colaborador: { findFirst: findColab },
+    });
+
+    await service.registrarManual(
+      "ator-1",
+      {
+        colaborador_id: "c1",
+        tipo: "entrada",
+        observacao: "Câmera quebrada no posto",
+      },
+      { ip: "10.0.0.1", user_agent: "test" },
+    );
+
+    expect(create).toHaveBeenCalledOnce();
+    const args = create.mock.calls[0][0].data;
+    expect(args.origem).toBe("manual");
+    expect(args.colaborador_id).toBe("c1");
+    expect(args.observacao).toContain("[manual por ator-1]");
+    expect(args.observacao).toContain("Câmera quebrada");
+  });
+
+  it("respeita registrada_em quando informado (backfill)", async () => {
+    const create = vi.fn().mockResolvedValue({ id: "m1" });
+    const { service } = makeService(null, {
+      marcacao: { findFirst: vi.fn(), create },
+      colaborador: { findFirst: vi.fn().mockResolvedValue({ id: "c1", ativo: true }) },
+    });
+
+    const iso = "2026-01-15T08:30:00Z";
+    await service.registrarManual(
+      "ator-1",
+      { colaborador_id: "c1", tipo: "entrada", observacao: "Registro retroativo", registrada_em: iso },
+      {},
+    );
+
+    const data = create.mock.calls[0][0].data;
+    expect(data.registrada_em.toISOString()).toBe(new Date(iso).toISOString());
+  });
+
+  it("falha com NotFoundException se colaborador não existe", async () => {
+    const create = vi.fn();
+    const { service } = makeService(null, {
+      marcacao: { findFirst: vi.fn(), create },
+      colaborador: { findFirst: vi.fn().mockResolvedValue(null) },
+    });
+
+    await expect(
+      service.registrarManual(
+        "ator-1",
+        { colaborador_id: "c1", tipo: "entrada", observacao: "Qualquer justificativa válida" },
+        {},
+      ),
+    ).rejects.toBeInstanceOf(NotFoundException);
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it("não valida sequência (permite registrar em estado inválido)", async () => {
+    const create = vi.fn().mockResolvedValue({ id: "m1" });
+    const { service } = makeService("entrada", {
+      marcacao: { findFirst: vi.fn().mockResolvedValue({ tipo: "entrada" }), create },
+      colaborador: { findFirst: vi.fn().mockResolvedValue({ id: "c1", ativo: true }) },
+    });
+
+    // registrar outra "entrada" em sequência seria bloqueado no fluxo normal,
+    // mas o manual deve prosseguir (cenário: corrigir esquecimento de saída).
+    await expect(
+      service.registrarManual(
+        "ator-1",
+        { colaborador_id: "c1", tipo: "entrada", observacao: "Correção de ponto duplicado" },
+        {},
+      ),
+    ).resolves.toEqual({ id: "m1" });
+  });
+});
+
+describe("MarcacoesService.listar (escopo)", () => {
+  function makeListar() {
+    const findMany = vi.fn().mockResolvedValue([]);
+    const count = vi.fn().mockResolvedValue(0);
+    const $transaction = vi.fn(async (ops: Promise<unknown>[]) => Promise.all(ops));
+    const { service } = makeService(null, {
+      marcacao: { findFirst: vi.fn(), findMany, count },
+      $transaction,
+    });
+    return { service, findMany };
+  }
+
+  it("gestor força filtro por setor_id próprio, ignorando filtro externo", async () => {
+    const { service, findMany } = makeListar();
+    await service.listar(
+      1,
+      50,
+      { setor_id: "outro-setor" },
+      { perfil: "gestor", setor_id: "setor-dele" },
+    );
+    const where = findMany.mock.calls[0][0].where;
+    expect(where.colaborador.setor_id).toBe("setor-dele");
+  });
+
+  it("admin respeita filtro de setor_id da query", async () => {
+    const { service, findMany } = makeListar();
+    await service.listar(
+      1,
+      50,
+      { setor_id: "setor-query" },
+      { perfil: "admin", setor_id: "setor-admin" },
+    );
+    const where = findMany.mock.calls[0][0].where;
+    expect(where.colaborador.setor_id).toBe("setor-query");
+  });
+
+  it("admin sem filtro de setor não adiciona filtro de colaborador", async () => {
+    const { service, findMany } = makeListar();
+    await service.listar(1, 50, {}, { perfil: "admin", setor_id: "x" });
+    const where = findMany.mock.calls[0][0].where;
+    expect(where.colaborador).toBeUndefined();
   });
 });

@@ -274,7 +274,7 @@ export default function AdminMarcacoesPage() {
               {isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               Aplicar
             </Button>
-            {(unidadeId || setorId || tipo || colaboradorId || inicio || fim) ? (
+            {(unidadeId || setorId || tipo || colaboradorId || colaboradorBusca || inicio || fim) ? (
               <Button
                 type="button"
                 variant="outline"
@@ -283,6 +283,7 @@ export default function AdminMarcacoesPage() {
                   setSetorId("");
                   setTipo("");
                   setColaboradorId("");
+                  setColaboradorBusca("");
                   setInicio("");
                   setFim("");
                   setPage(1);

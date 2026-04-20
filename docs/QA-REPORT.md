@@ -34,6 +34,11 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - **Dashboard operacional** em `/admin` (presentes, em pausa, atrasos após 09:00, marcações do dia, lista de colaboradores em expediente).
 - **Escopo de gestor** (limita marcações e colaboradores ao próprio setor) com testes unitários.
 - **Preview de selfie** com URL assinada por 10 min, acessível tanto em `/admin/marcacoes` quanto em `/historico` (restrito ao próprio dono ou admin/rh/gestor).
+- **Gates de produção** para superfícies sensíveis: Swagger `/docs` e `/debug/sentry` ficam fechados em prod (abre com `EXPOSE_SWAGGER=true` / `EXPOSE_DEBUG=true`).
+- **ErrorBoundary web** (`app/global-error.tsx` + `app/(app)/error.tsx`) captura crashes de UI e reporta ao Sentry sem derrubar o app.
+- **Auto signOut em 401** no `apiFetch` — sessão revogada (colaborador inativo/deletado) redireciona para `/login?sessao=expirada` com toast informativo.
+- **Throttle específico em `/auth/sync`** (10 req/min) além do global 100/min — reduz enumeração de emails.
+- **Pagination compartilhado** (`components/ui/pagination.tsx`) usado em 3 telas.
 
 ## Testes automatizados
 

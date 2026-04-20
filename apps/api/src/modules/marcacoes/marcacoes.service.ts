@@ -60,6 +60,44 @@ export class MarcacoesService {
     });
   }
 
+  /**
+   * Registro manual por admin/RH quando captura normal falhou (GPS/câmera
+   * negados, dispositivo sem acesso). A justificativa vai em `observacao`
+   * e origem = "manual" marca o registro para auditoria.
+   *
+   * Não valida sequência: o objetivo é corrigir casos excepcionais, inclusive
+   * backfill. O campo `registrada_em` pode ser informado (passado) — se não,
+   * usa o agora.
+   */
+  async registrarManual(
+    atorColaboradorId: string,
+    dto: RegistrarManualDto,
+    ctx: RegistrarContexto,
+  ) {
+    const colaborador = await this.prisma.colaborador.findFirst({
+      where: { id: dto.colaborador_id, deleted_at: null },
+      select: { id: true, ativo: true },
+    });
+    if (!colaborador) {
+      throw new NotFoundException({
+        code: "COLABORADOR_NAO_ENCONTRADO",
+        message: "Colaborador inexistente ou removido",
+      });
+    }
+
+    return this.prisma.marcacao.create({
+      data: {
+        colaborador_id: dto.colaborador_id,
+        tipo: dto.tipo,
+        registrada_em: dto.registrada_em ? new Date(dto.registrada_em) : new Date(),
+        observacao: `[manual por ${atorColaboradorId}] ${dto.observacao}`,
+        ip: ctx.ip ?? null,
+        user_agent: ctx.user_agent ?? null,
+        origem: "manual",
+      },
+    });
+  }
+
   async validarSequencia(colaboradorId: string, novoTipo: TipoMarcacao) {
     const ultimaHoje = await this.ultimaMarcacaoHoje(colaboradorId);
     const ultimoTipo = (ultimaHoje?.tipo as TipoMarcacao | undefined) ?? "none";

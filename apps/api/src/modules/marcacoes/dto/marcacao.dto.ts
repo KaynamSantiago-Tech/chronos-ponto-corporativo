@@ -4,11 +4,13 @@ import {
   IsISO8601,
   IsLatitude,
   IsLongitude,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   IsUUID,
   MaxLength,
+  MinLength,
 } from "class-validator";
 
 import type { TipoMarcacao } from "@midrah/shared";

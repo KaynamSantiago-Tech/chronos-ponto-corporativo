@@ -82,7 +82,12 @@ function SidebarLink({ item, active }: { item: MenuItem; active: boolean }) {
   );
 }
 
-export default function Sidebar() {
+interface SidebarProps {
+  aberto?: boolean;
+  onFechar?: () => void;
+}
+
+export default function Sidebar({ aberto = false, onFechar }: SidebarProps) {
   const pathname = usePathname();
   const { data: colaborador } = useColaboradorAtual();
 
@@ -92,13 +97,23 @@ export default function Sidebar() {
     (item) => !item.perfis || (perfil && item.perfis.includes(perfil)),
   );
 
-  return (
-    <aside className="hidden w-60 shrink-0 border-r border-border bg-card/40 p-4 md:block">
-      <div className="mb-6 flex items-center gap-2 px-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          <Clock4 className="h-4 w-4" />
+  const conteudo = (
+    <>
+      <div className="mb-6 flex items-center justify-between px-2">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <Clock4 className="h-4 w-4" />
+          </div>
+          <div className="text-sm font-semibold">Midrah Ponto</div>
         </div>
-        <div className="text-sm font-semibold">Midrah Ponto</div>
+        <button
+          type="button"
+          onClick={onFechar}
+          className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
+          aria-label="Fechar menu"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>
 
       <nav className="flex flex-col gap-1">
@@ -117,6 +132,26 @@ export default function Sidebar() {
           </>
         ) : null}
       </nav>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      <aside className="hidden w-60 shrink-0 border-r border-border bg-card/40 p-4 md:block">
+        {conteudo}
+      </aside>
+      {aberto ? (
+        <div className="fixed inset-0 z-50 flex md:hidden" role="dialog" aria-modal="true">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={onFechar}
+            aria-hidden
+          />
+          <aside className="relative z-10 flex w-64 flex-col overflow-y-auto border-r border-border bg-card p-4 shadow-xl">
+            {conteudo}
+          </aside>
+        </div>
+      ) : null}
+    </>
   );
 }

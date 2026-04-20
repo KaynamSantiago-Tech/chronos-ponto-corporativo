@@ -254,13 +254,19 @@ export default function PontoRegistrar() {
           {ACOES.map((acao) => {
             const Icon = acao.icon;
             const loading = acaoEmAndamento === acao.tipo && mutation.isPending;
+            const permitida = proximasPermitidas.has(acao.tipo);
             return (
               <Button
                 key={acao.tipo}
                 variant={acao.variant}
-                disabled={mutation.isPending}
+                disabled={mutation.isPending || !permitida}
                 onClick={() => registrar(acao.tipo)}
-                className="h-14 justify-center"
+                className={cn("h-14 justify-center", !permitida && "opacity-40")}
+                title={
+                  permitida
+                    ? undefined
+                    : `Indisponível após ${ROTULO_TIPO[ultimoTipo as TipoMarcacao] ?? "último registro"}`
+                }
               >
                 {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Icon className="h-5 w-5" />}
                 {acao.label}

@@ -11,6 +11,7 @@ import { RolesGuard } from "./common/guards/roles.guard";
 import { AuthModule } from "./modules/auth/auth.module";
 import { CargosModule } from "./modules/cargos/cargos.module";
 import { ColaboradoresModule } from "./modules/colaboradores/colaboradores.module";
+import { DebugModule } from "./modules/debug/debug.module";
 import { EvidenciasModule } from "./modules/evidencias/evidencias.module";
 import { HealthModule } from "./modules/health/health.module";
 import { LogsModule } from "./modules/logs/logs.module";

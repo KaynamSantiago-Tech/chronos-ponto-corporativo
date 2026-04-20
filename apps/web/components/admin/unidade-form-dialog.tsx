@@ -11,7 +11,8 @@ import { Dialog } from "@/components/ui/dialog";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
-import { apiFetch, ApiRequestError } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
+import { formatarErroApi } from "@/lib/api-errors";
 
 const schema = z.object({
   nome: z.string().trim().min(2, "Mínimo 2 caracteres").max(80),

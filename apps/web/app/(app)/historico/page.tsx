@@ -154,9 +154,7 @@ export default function HistoricoPage() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Carregando…
-            </div>
+            <TableSkeleton rows={6} columns={5} />
           ) : isError ? (
             <div className="text-sm text-destructive">
               Erro ao carregar: {(error as Error).message}

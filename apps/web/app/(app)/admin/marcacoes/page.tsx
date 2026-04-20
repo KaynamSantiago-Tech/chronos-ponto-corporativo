@@ -172,6 +172,52 @@ export default function AdminMarcacoesPage() {
               <Input id="fim" type="date" value={fim} onChange={(e) => setFim(e.target.value)} />
             </div>
             <div className="flex flex-col gap-1">
+              <Label htmlFor="unidade">Unidade</Label>
+              <Select
+                id="unidade"
+                value={unidadeId}
+                onChange={(e) => {
+                  setUnidadeId(e.target.value);
+                  setSetorId("");
+                }}
+                className="min-w-[180px]"
+              >
+                <option value="">Todas</option>
+                {unidadesQuery.data?.items?.map((u) => (
+                  <option key={u.id} value={u.id}>{u.nome}</option>
+                ))}
+              </Select>
+            </div>
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="setor">Setor</Label>
+              <Select
+                id="setor"
+                value={setorId}
+                onChange={(e) => setSetorId(e.target.value)}
+                className="min-w-[180px]"
+              >
+                <option value="">Todos</option>
+                {setoresQuery.data?.items?.map((s) => (
+                  <option key={s.id} value={s.id}>{s.nome}</option>
+                ))}
+              </Select>
+            </div>
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="tipo">Tipo</Label>
+              <Select
+                id="tipo"
+                value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
+                className="min-w-[160px]"
+              >
+                <option value="">Todos</option>
+                <option value="entrada">Entrada</option>
+                <option value="saida">Saída</option>
+                <option value="pausa_inicio">Pausa iniciada</option>
+                <option value="pausa_fim">Pausa finalizada</option>
+              </Select>
+            </div>
+            <div className="flex flex-col gap-1">
               <Label htmlFor="colaborador">Colaborador ID</Label>
               <Input
                 id="colaborador"
@@ -184,6 +230,23 @@ export default function AdminMarcacoesPage() {
               {isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               Aplicar
             </Button>
+            {(unidadeId || setorId || tipo || colaboradorId || inicio || fim) ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setUnidadeId("");
+                  setSetorId("");
+                  setTipo("");
+                  setColaboradorId("");
+                  setInicio("");
+                  setFim("");
+                  setPage(1);
+                }}
+              >
+                Limpar
+              </Button>
+            ) : null}
           </form>
         </CardContent>
       </Card>

@@ -81,6 +81,15 @@ export default function PontoRegistrar() {
   const [iniciandoCamera, setIniciandoCamera] = useState(false);
   const [acaoEmAndamento, setAcaoEmAndamento] = useState<TipoMarcacao | null>(null);
 
+  const hojeQuery = useMarcacoesMe({ inicio: inicioDoDiaIso(), page_size: 20 });
+
+  const ultimaHoje = hojeQuery.data?.items?.[0];
+  const ultimoTipo = (ultimaHoje?.tipo as TipoMarcacao | undefined) ?? "none";
+  const proximasPermitidas = useMemo(
+    () => new Set(PROXIMAS[ultimoTipo]),
+    [ultimoTipo],
+  );
+
   const pararCamera = useCallback(() => {
     liberarCamera(streamRef.current);
     streamRef.current = null;

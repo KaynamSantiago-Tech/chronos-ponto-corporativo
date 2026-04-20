@@ -36,23 +36,45 @@ interface MarcacaoAdmin extends Marcacao {
 
 const LIMITE_EXPORT = 5000;
 
+interface Unidade { id: string; nome: string; }
+interface Setor { id: string; nome: string; unidade_id: string; }
+
 export default function AdminMarcacoesPage() {
   const toast = useToast();
   const [inicio, setInicio] = useState("");
   const [fim, setFim] = useState("");
   const [colaboradorId, setColaboradorId] = useState("");
+  const [unidadeId, setUnidadeId] = useState("");
+  const [setorId, setSetorId] = useState("");
+  const [tipo, setTipo] = useState("");
   const [page, setPage] = useState(1);
   const [exportando, setExportando] = useState(false);
   const [manualAberto, setManualAberto] = useState(false);
+
+  const unidadesQuery = useQuery({
+    queryKey: ["unidades", "select"],
+    queryFn: () =>
+      apiFetch<Paginated<Unidade>>("/unidades", { query: { page: 1, page_size: 100 } }),
+  });
+  const setoresQuery = useQuery({
+    queryKey: ["setores", "select", unidadeId],
+    queryFn: () =>
+      apiFetch<Paginated<Setor>>("/setores", {
+        query: { page: 1, page_size: 200, unidade_id: unidadeId || undefined },
+      }),
+  });
 
   const filtrosIso = {
     inicio: inicio ? new Date(inicio).toISOString() : undefined,
     fim: fim ? new Date(fim).toISOString() : undefined,
     colaborador_id: colaboradorId || undefined,
+    unidade_id: unidadeId || undefined,
+    setor_id: setorId || undefined,
+    tipo: tipo || undefined,
   } as const;
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
-    queryKey: ["admin-marcacoes", { page, inicio, fim, colaboradorId }],
+    queryKey: ["admin-marcacoes", { page, ...filtrosIso }],
     queryFn: () =>
       apiFetch<Paginated<MarcacaoAdmin>>("/marcacoes", {
         query: { page, page_size: 50, ...filtrosIso },

@@ -39,6 +39,8 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - **Auto signOut em 401** no `apiFetch` — sessão revogada (colaborador inativo/deletado) redireciona para `/login?sessao=expirada` com toast informativo.
 - **Throttle específico em `/auth/sync`** (10 req/min) além do global 100/min — reduz enumeração de emails.
 - **Pagination compartilhado** (`components/ui/pagination.tsx`) usado em 3 telas.
+- **Export CSV no histórico próprio** — colaborador baixa o próprio ponto sem depender do RH.
+- **EmptyState padronizado** em 7 listagens (histórico + 6 admin), tom consistente e call-to-action quando faz sentido.
 
 ## Testes automatizados
 

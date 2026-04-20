@@ -52,6 +52,10 @@ export function obterCoordenadasAtuais(timeoutMs = 10_000): Promise<Coordenadas>
           reject(new GeolocationTimeoutError());
           return;
         }
+        if (error.code === error.POSITION_UNAVAILABLE) {
+          reject(new GeolocationUnavailableError());
+          return;
+        }
         reject(new Error(error.message || "Falha ao obter localização"));
       },
       {

@@ -74,7 +74,16 @@ export default function ColaboradoresPage() {
         <CardHeader>
           <CardTitle>Lista</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-col gap-4">
+          <div className="relative max-w-sm">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              placeholder="Buscar por nome, matrícula ou email"
+              className="pl-9"
+            />
+          </div>
           {isLoading ? (
             <TableSkeleton rows={6} columns={5} />
           ) : isError ? (

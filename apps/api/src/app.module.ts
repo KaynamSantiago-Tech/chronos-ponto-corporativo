@@ -55,6 +55,7 @@ import { UnidadesModule } from "./modules/unidades/unidades.module";
     EvidenciasModule,
     LogsModule,
     RoletaModule,
+    DebugModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

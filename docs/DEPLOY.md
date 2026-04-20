@@ -78,7 +78,7 @@ Passos no painel:
 Verificação:
 ```bash
 curl https://<dominio-railway>/health    # { "status": "ok" }
-curl https://<dominio-railway>/api/docs  # Swagger UI (em staging)
+curl https://<dominio-railway>/docs       # Swagger UI — apenas fora de prod ou com EXPOSE_SWAGGER=true
 ```
 
 ### 2. Vercel — `apps/web`

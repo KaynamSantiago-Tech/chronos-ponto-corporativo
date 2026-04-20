@@ -47,6 +47,10 @@ async function main() {
   });
 
   console.log("Seed executado com sucesso.");
+  console.log(
+    "Próximo passo: crie no Supabase Auth um usuário com o email admin@midrah.com.br " +
+      "(mesmo email do colaborador). No primeiro login, POST /auth/sync vincula o auth_user_id automaticamente.",
+  );
 }
 
 main()

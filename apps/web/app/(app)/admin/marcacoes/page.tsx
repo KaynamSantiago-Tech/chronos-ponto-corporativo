@@ -42,15 +42,27 @@ interface Setor { id: string; nome: string; unidade_id: string; }
 
 export default function AdminMarcacoesPage() {
   const toast = useToast();
-  const [inicio, setInicio] = useState("");
-  const [fim, setFim] = useState("");
-  const [colaboradorId, setColaboradorId] = useState("");
-  const [colaboradorBusca, setColaboradorBusca] = useState("");
-  const [colaboradorBuscaDeb, setColaboradorBuscaDeb] = useState("");
-  const [unidadeId, setUnidadeId] = useState("");
-  const [setorId, setSetorId] = useState("");
-  const [tipo, setTipo] = useState("");
-  const [page, setPage] = useState(1);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [inicio, setInicio] = useState(() => searchParams.get("inicio") ?? "");
+  const [fim, setFim] = useState(() => searchParams.get("fim") ?? "");
+  const [colaboradorId, setColaboradorId] = useState(
+    () => searchParams.get("colaborador_id") ?? "",
+  );
+  const [colaboradorBusca, setColaboradorBusca] = useState(
+    () => searchParams.get("colaborador_busca") ?? "",
+  );
+  const [colaboradorBuscaDeb, setColaboradorBuscaDeb] = useState(
+    () => searchParams.get("colaborador_busca") ?? "",
+  );
+  const [unidadeId, setUnidadeId] = useState(() => searchParams.get("unidade_id") ?? "");
+  const [setorId, setSetorId] = useState(() => searchParams.get("setor_id") ?? "");
+  const [tipo, setTipo] = useState(() => searchParams.get("tipo") ?? "");
+  const [page, setPage] = useState(() => {
+    const p = Number.parseInt(searchParams.get("page") ?? "1", 10);
+    return Number.isFinite(p) && p > 0 ? p : 1;
+  });
   const [exportando, setExportando] = useState(false);
   const [manualAberto, setManualAberto] = useState(false);
 

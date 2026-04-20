@@ -160,9 +160,10 @@ export default function HistoricoPage() {
               Erro ao carregar: {(error as Error).message}
             </div>
           ) : items.length === 0 ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">
-              Nenhuma marcação no período.
-            </div>
+            <EmptyState
+              title="Nenhuma marcação no período"
+              description="Ajuste o filtro de datas ou registre um ponto em /ponto."
+            />
           ) : (
             <>
               <Table>

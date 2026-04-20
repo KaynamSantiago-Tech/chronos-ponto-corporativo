@@ -108,6 +108,19 @@ export async function apiFetch<T = unknown>(
     } catch {
       // body não é JSON
     }
+    if (
+      response.status === 401 &&
+      typeof window !== "undefined" &&
+      !window.location.pathname.startsWith("/login")
+    ) {
+      try {
+        const supabase = getSupabaseBrowserClient();
+        await supabase.auth.signOut();
+      } catch {
+        // ignora — vamos redirecionar mesmo assim
+      }
+      window.location.href = "/login?sessao=expirada";
+    }
     throw new ApiRequestError(payload);
   }
 

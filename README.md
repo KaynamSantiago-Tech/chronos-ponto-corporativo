@@ -110,10 +110,10 @@ Erros esperados em `/auth/sync`:
 
 | Perfil        | Pode                                                                 |
 | ------------- | -------------------------------------------------------------------- |
-| `admin`       | tudo, incluindo logs de auditoria                                    |
+| `admin`       | tudo, incluindo logs de auditoria e export CSV                       |
 | `rh`          | CRUDs de cargos/setores/unidades/colaboradores; ver todas marcações  |
-| `gestor`      | ver marcações (filtrar por setor/unidade); não edita cadastros       |
-| `colaborador` | registrar próprio ponto; ver próprio histórico                       |
+| `gestor`      | ver colaboradores e marcações **apenas do próprio setor**; não edita |
+| `colaborador` | registrar próprio ponto; ver próprio histórico e selfies próprias    |
 
 Frontend aplica `PermissionGate`; backend aplica `@Roles()` + `JwtAuthGuard` + RLS no Postgres como defesa em profundidade.
 

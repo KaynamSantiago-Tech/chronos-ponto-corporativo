@@ -57,6 +57,12 @@ const MENU_ADMIN: MenuItem[] = [
   { label: "Logs de auditoria", href: "/admin/logs", icon: Shield, perfis: ["admin"] },
 ];
 
+function ehAtivo(pathname: string | null | undefined, href: string): boolean {
+  if (!pathname) return false;
+  if (href === "/admin") return pathname === "/admin";
+  return pathname.startsWith(href);
+}
+
 function SidebarLink({ item, active }: { item: MenuItem; active: boolean }) {
   const Icon = item.icon;
   return (

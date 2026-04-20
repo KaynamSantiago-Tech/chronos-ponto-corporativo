@@ -2,10 +2,12 @@
 
 import type { Marcacao, Paginated, TipoMarcacao } from "@midrah/shared";
 import { useQuery } from "@tanstack/react-query";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2, PlusCircle } from "lucide-react";
 import { useState } from "react";
 
+import { MarcacaoManualDialog } from "@/components/admin/marcacao-manual-dialog";
 import { SelfiePreviewButton } from "@/components/admin/selfie-preview-button";
+import { PermissionGate } from "@/components/permission-gate";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

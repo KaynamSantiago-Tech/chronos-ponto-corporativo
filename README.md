@@ -48,16 +48,12 @@ cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env.local
 #   preencha com as credenciais do seu projeto Supabase
 
-# 4. Banco — gera client + aplica schema + seed
+# 4. Banco — gera client + aplica schema + CHECKs + RLS + seed
 pnpm --filter @midrah/api prisma generate
-pnpm --filter @midrah/api prisma migrate dev
+pnpm --filter @midrah/api prisma migrate deploy   # aplica as 3 migrations em ordem
 pnpm --filter @midrah/api prisma db seed
 
-# 5. Aplicar CHECK constraints e RLS (manual, único passo)
-#   rode os SQLs em apps/api/prisma/migrations/manual_checks.sql
-#   e manual_rls.sql no SQL editor do Supabase
-
-# 6. Subir tudo em paralelo
+# 5. Subir tudo em paralelo
 pnpm dev
 #   → web  em http://localhost:3000
 #   → api  em http://localhost:3333

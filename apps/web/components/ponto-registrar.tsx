@@ -279,6 +279,71 @@ export default function PontoRegistrar() {
           )}
         </div>
 
+        <div className="flex flex-col gap-2 rounded-md border border-border bg-muted/20 p-3 text-xs">
+          <div className="flex items-start gap-2">
+            {cameraPronta ? (
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+            ) : cameraErro ? (
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+            ) : (
+              <Camera className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+            )}
+            <div className="flex-1">
+              <p className="font-medium text-foreground">Câmera</p>
+              <p className="text-muted-foreground">
+                {cameraPronta
+                  ? "Pronta."
+                  : cameraErro
+                    ? cameraErro
+                    : "Ative a câmera para capturar a selfie de evidência."}
+              </p>
+            </div>
+            {!cameraPronta && cameraErro ? (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={iniciarCamera}
+                disabled={iniciandoCamera}
+              >
+                <RefreshCw className="h-3.5 w-3.5" /> Tentar
+              </Button>
+            ) : null}
+          </div>
+          <div className="flex items-start gap-2">
+            {gpsStatus === "ok" ? (
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+            ) : gpsStatus === "erro" ? (
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+            ) : gpsStatus === "verificando" ? (
+              <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-muted-foreground" />
+            ) : (
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+            )}
+            <div className="flex-1">
+              <p className="font-medium text-foreground">Localização</p>
+              <p className="text-muted-foreground">
+                {gpsStatus === "ok" && gpsPrecisao !== null
+                  ? `Capturada (precisão ~${Math.round(gpsPrecisao)} m).`
+                  : gpsStatus === "erro"
+                    ? gpsErro
+                    : gpsStatus === "verificando"
+                      ? "Obtendo coordenadas…"
+                      : "Será solicitada no primeiro registro."}
+              </p>
+            </div>
+            {gpsStatus !== "verificando" ? (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={verificarGps}
+                disabled={gpsStatus === "verificando"}
+              >
+                <RefreshCw className="h-3.5 w-3.5" /> Testar
+              </Button>
+            ) : null}
+          </div>
+        </div>
+
         <div className="relative overflow-hidden rounded-lg border border-border bg-black/30 aspect-[4/3]">
           <video
             ref={videoRef}

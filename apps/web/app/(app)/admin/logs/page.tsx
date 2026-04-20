@@ -159,14 +159,14 @@ export default function LogsPage() {
                   </span>
                   <div className="flex gap-2">
                     <Button
-                      variant="secondary"
+                      variant="outline"
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page <= 1}
                     >
                       Anterior
                     </Button>
                     <Button
-                      variant="secondary"
+                      variant="outline"
                       onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page >= totalPages}
                     >

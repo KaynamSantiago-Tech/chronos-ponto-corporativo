@@ -35,8 +35,15 @@ export class EvidenciasController {
   }
 
   @Get("signed-url")
-  @Roles("admin", "rh", "gestor")
-  signedUrl(@Query() query: SignedUrlQueryDto) {
+  signedUrl(@CurrentUser() user: RequestUser, @Query() query: SignedUrlQueryDto) {
+    const ehDoProprio = query.path.startsWith(`${user.colaborador_id}/`);
+    const temAcessoTotal = PERFIS_COM_ACESSO_TOTAL.has(user.perfil);
+    if (!ehDoProprio && !temAcessoTotal) {
+      throw new ForbiddenException({
+        code: "ACESSO_NEGADO",
+        message: "Sem permissão para esta evidência",
+      });
+    }
     const seconds = query.seconds ? Math.min(3600, Math.max(60, Number(query.seconds))) : 3600;
     return this.service.signedUrl(query.path, seconds);
   }

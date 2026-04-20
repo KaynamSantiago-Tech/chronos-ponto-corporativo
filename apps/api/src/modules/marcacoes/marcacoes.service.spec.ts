@@ -1,20 +1,32 @@
-import { ConflictException } from "@nestjs/common";
+import { ConflictException, NotFoundException } from "@nestjs/common";
 import { describe, expect, it, vi } from "vitest";
 
 import { MarcacoesService } from "./marcacoes.service";
 
 type PrismaMock = {
-  marcacao: { findFirst: ReturnType<typeof vi.fn> };
+  marcacao: {
+    findFirst: ReturnType<typeof vi.fn>;
+    findUnique?: ReturnType<typeof vi.fn>;
+    create?: ReturnType<typeof vi.fn>;
+    findMany?: ReturnType<typeof vi.fn>;
+    count?: ReturnType<typeof vi.fn>;
+  };
+  colaborador?: {
+    findFirst: ReturnType<typeof vi.fn>;
+  };
+  $transaction?: ReturnType<typeof vi.fn>;
 };
 
-function makeService(ultimoTipo: string | null) {
+function makeService(ultimoTipo: string | null, extra: Partial<PrismaMock> = {}) {
   const prisma: PrismaMock = {
     marcacao: {
       findFirst: vi.fn().mockResolvedValue(ultimoTipo ? { tipo: ultimoTipo } : null),
+      ...(extra.marcacao ?? {}),
     },
+    ...extra,
   };
   // @ts-expect-error — injeção manual do mock
-  return new MarcacoesService(prisma);
+  return { service: new MarcacoesService(prisma), prisma };
 }
 
 describe("MarcacoesService.validarSequencia", () => {

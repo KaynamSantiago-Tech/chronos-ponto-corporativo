@@ -107,6 +107,7 @@ export default function HistoricoPage() {
                     <TableHead>Tipo</TableHead>
                     <TableHead>Origem</TableHead>
                     <TableHead>Localização</TableHead>
+                    <TableHead className="w-24 text-right">Evidência</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -121,6 +122,13 @@ export default function HistoricoPage() {
                         {m.latitude != null && m.longitude != null
                           ? `${Number(m.latitude).toFixed(5)}, ${Number(m.longitude).toFixed(5)}`
                           : "—"}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {m.evidencia_url ? (
+                          <SelfiePreviewButton path={m.evidencia_url} />
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}

@@ -59,9 +59,7 @@ export default function CargosPage() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Carregando…
-            </div>
+            <TableSkeleton rows={5} columns={3} />
           ) : isError ? (
             <div className="text-sm text-destructive">Erro: {(error as Error).message}</div>
           ) : !data || data.items.length === 0 ? (

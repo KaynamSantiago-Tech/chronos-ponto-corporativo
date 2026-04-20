@@ -18,6 +18,13 @@ export class GeolocationTimeoutError extends Error {
   }
 }
 
+export class GeolocationUnavailableError extends Error {
+  constructor(message = "Sinal de GPS indisponível — teste próximo a uma janela ou ao ar livre") {
+    super(message);
+    this.name = "GeolocationUnavailableError";
+  }
+}
+
 /**
  * Promisifica navigator.geolocation.getCurrentPosition com timeout de 10s.
  * Rejeita com erro tipado em caso de falha.

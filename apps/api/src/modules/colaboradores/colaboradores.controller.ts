@@ -53,6 +53,7 @@ export class ColaboradoresController {
       unidade_id: q.unidade_id,
       perfil: q.perfil,
       ativo: q.ativo,
+      busca: q.busca,
     });
   }
 

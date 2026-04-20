@@ -78,13 +78,8 @@ export function CargoFormDialog({ open, onOpenChange, cargo }: CargoFormDialogPr
       onOpenChange(false);
     },
     onError: (err: unknown) => {
-      const msg =
-        err instanceof ApiRequestError
-          ? err.code === "CONFLITO"
-            ? "Já existe um cargo com esse nome."
-            : err.message
-          : "Erro desconhecido";
-      toast.error("Falha ao salvar cargo", msg);
+      const amigavel = formatarErroApi(err, "Falha ao salvar cargo");
+      toast.error(amigavel.titulo, amigavel.descricao);
     },
   });
 

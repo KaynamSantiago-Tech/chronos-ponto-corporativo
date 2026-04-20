@@ -102,11 +102,7 @@ export default function Sidebar() {
 
       <nav className="flex flex-col gap-1">
         {MENU.map((item) => (
-          <SidebarLink
-            key={item.href}
-            item={item}
-            active={pathname?.startsWith(item.href) ?? false}
-          />
+          <SidebarLink key={item.href} item={item} active={ehAtivo(pathname, item.href)} />
         ))}
 
         {itensAdmin.length > 0 ? (
@@ -115,11 +111,7 @@ export default function Sidebar() {
               Administração
             </div>
             {itensAdmin.map((item) => (
-              <SidebarLink
-                key={item.href}
-                item={item}
-                active={pathname?.startsWith(item.href) ?? false}
-              />
+              <SidebarLink key={item.href} item={item} active={ehAtivo(pathname, item.href)} />
             ))}
           </>
         ) : null}

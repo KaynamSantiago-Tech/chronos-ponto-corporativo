@@ -6,7 +6,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
-import { apiFetch, ApiRequestError } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
+import { formatarErroApi } from "@/lib/api-errors";
 
 interface SelfiePreviewButtonProps {
   path: string;

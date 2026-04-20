@@ -72,8 +72,8 @@ export function UnidadeFormDialog({ open, onOpenChange, unidade }: UnidadeFormDi
       onOpenChange(false);
     },
     onError: (err: unknown) => {
-      const msg = err instanceof ApiRequestError ? err.message : "Erro desconhecido";
-      toast.error("Falha ao salvar unidade", msg);
+      const amigavel = formatarErroApi(err, "Falha ao salvar unidade");
+      toast.error(amigavel.titulo, amigavel.descricao);
     },
   });
 

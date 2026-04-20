@@ -39,6 +39,7 @@ export default function AdminMarcacoesPage() {
   const [colaboradorId, setColaboradorId] = useState("");
   const [page, setPage] = useState(1);
   const [exportando, setExportando] = useState(false);
+  const [manualAberto, setManualAberto] = useState(false);
 
   const filtrosIso = {
     inicio: inicio ? new Date(inicio).toISOString() : undefined,

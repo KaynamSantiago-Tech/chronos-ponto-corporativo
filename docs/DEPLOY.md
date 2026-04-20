@@ -50,6 +50,7 @@ Guia operacional para colocar o sistema no ar. Um ambiente de **staging** (pilot
 | `PORT` | opcional | Railway injeta automaticamente; default 3333 |
 | `NODE_ENV` | ✅ | `production` |
 | `EXPOSE_SWAGGER` | opcional | `true` reabre `/docs` em produção (default: bloqueado) |
+| `EXPOSE_DEBUG` | opcional | `true` reabre `/debug/sentry` em produção (default: bloqueado) |
 
 ### `apps/web` (Vercel)
 

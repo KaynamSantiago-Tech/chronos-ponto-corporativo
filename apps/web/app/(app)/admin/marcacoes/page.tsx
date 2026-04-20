@@ -66,6 +66,30 @@ export default function AdminMarcacoesPage() {
       }),
   });
 
+  useEffect(() => {
+    const id = setTimeout(() => setColaboradorBuscaDeb(colaboradorBusca.trim()), 300);
+    return () => clearTimeout(id);
+  }, [colaboradorBusca]);
+
+  const colaboradoresQuery = useQuery({
+    queryKey: ["colaboradores", "picker", colaboradorBuscaDeb],
+    queryFn: () =>
+      apiFetch<Paginated<Colaborador>>("/colaboradores", {
+        query: {
+          page: 1,
+          page_size: 20,
+          ativo: true,
+          busca: colaboradorBuscaDeb || undefined,
+        },
+      }),
+    enabled: colaboradorBuscaDeb.length >= 2,
+  });
+
+  const colaboradoresOptions = useMemo(
+    () => colaboradoresQuery.data?.items ?? [],
+    [colaboradoresQuery.data],
+  );
+
   const filtrosIso = {
     inicio: inicio ? new Date(inicio).toISOString() : undefined,
     fim: fim ? new Date(fim).toISOString() : undefined,

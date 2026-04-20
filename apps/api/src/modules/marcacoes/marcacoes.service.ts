@@ -9,7 +9,7 @@ import type { TipoMarcacao } from "@midrah/shared";
 
 import type { Paginated } from "../../common/dto/pagination.dto";
 import { PrismaService } from "../../prisma/prisma.service";
-import { ListarMarcacoesDto, RegistrarMarcacaoDto } from "./dto/marcacao.dto";
+import { ListarMarcacoesDto, RegistrarManualDto, RegistrarMarcacaoDto } from "./dto/marcacao.dto";
 
 /**
  * Transições permitidas por tipo. Considera o dia local (America/Sao_Paulo).

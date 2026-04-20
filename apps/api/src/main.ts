@@ -45,6 +45,7 @@ async function bootstrap() {
 }
 
 bootstrap().catch((err) => {
+  Sentry.captureException(err);
   // eslint-disable-next-line no-console
   console.error("bootstrap failed", err);
   process.exit(1);

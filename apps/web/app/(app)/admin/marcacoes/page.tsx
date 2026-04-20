@@ -188,9 +188,7 @@ export default function AdminMarcacoesPage() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Carregando…
-            </div>
+            <TableSkeleton rows={8} columns={6} />
           ) : isError ? (
             <div className="text-sm text-destructive">
               Erro: {(error as Error).message}

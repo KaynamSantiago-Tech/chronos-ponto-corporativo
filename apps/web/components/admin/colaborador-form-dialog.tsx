@@ -159,13 +159,8 @@ export function ColaboradorFormDialog({
       onOpenChange(false);
     },
     onError: (err: unknown) => {
-      const msg =
-        err instanceof ApiRequestError
-          ? err.code === "CONFLITO"
-            ? "Matrícula, email ou CPF já cadastrado."
-            : err.message
-          : "Erro desconhecido";
-      toast.error("Falha ao salvar colaborador", msg);
+      const amigavel = formatarErroApi(err, "Falha ao salvar colaborador");
+      toast.error(amigavel.titulo, amigavel.descricao);
     },
   });
 

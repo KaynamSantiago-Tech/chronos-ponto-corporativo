@@ -13,7 +13,8 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
-import { apiFetch, ApiRequestError } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
+import { formatarErroApi } from "@/lib/api-errors";
 
 const PERFIS = ["admin", "rh", "gestor", "colaborador"] as const;
 const cpfRegex = /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/;

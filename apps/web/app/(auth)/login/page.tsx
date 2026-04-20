@@ -47,6 +47,25 @@ export default function LoginPage() {
       return;
     }
 
+    try {
+      await apiFetch("/auth/sync", { method: "POST" });
+    } catch (err) {
+      if (err instanceof ApiRequestError) {
+        const mensagem =
+          err.code === "COLABORADOR_NAO_CADASTRADO"
+            ? "Seu email ainda não está cadastrado no sistema. Procure o RH."
+            : err.code === "VINCULO_CONFLITO"
+              ? "Conta já vinculada a outro usuário. Procure o administrador."
+              : err.message;
+        await supabase.auth.signOut();
+        toast.error("Não foi possível concluir o login", mensagem);
+        return;
+      }
+      await supabase.auth.signOut();
+      toast.error("Não foi possível concluir o login", "Erro inesperado.");
+      return;
+    }
+
     const destino = searchParams.get("redirecionar") || "/dashboard";
     toast.success("Bem-vindo(a)!", "Sessão iniciada com sucesso.");
     router.replace(destino);

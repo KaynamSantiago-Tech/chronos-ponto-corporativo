@@ -200,7 +200,17 @@ export class MarcacoesService {
     const m = await this.prisma.marcacao.findUnique({
       where: { id },
       include: {
-        colaborador: { select: { id: true, nome: true, matricula: true, setor_id: true } },
+        colaborador: {
+          select: {
+            id: true,
+            nome: true,
+            matricula: true,
+            email: true,
+            setor_id: true,
+            setor: { select: { id: true, nome: true } },
+            unidade: { select: { id: true, nome: true } },
+          },
+        },
       },
     });
     if (!m) throw new NotFoundException({ code: "NOT_FOUND", message: "Marcação não encontrada" });

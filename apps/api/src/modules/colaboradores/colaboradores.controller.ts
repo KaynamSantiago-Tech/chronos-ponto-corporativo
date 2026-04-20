@@ -40,9 +40,11 @@ export class ColaboradoresController {
   constructor(private readonly service: ColaboradoresService) {}
 
   @Get()
-  listar(@Query() q: ListarColaboradoresQueryDto) {
+  listar(@CurrentUser() user: RequestUser, @Query() q: ListarColaboradoresQueryDto) {
+    // Gestor só lista colaboradores do próprio setor.
+    const setorEfetivo = user.perfil === "gestor" ? user.setor_id : q.setor_id;
     return this.service.listar(q.page, q.page_size, {
-      setor_id: q.setor_id,
+      setor_id: setorEfetivo,
       unidade_id: q.unidade_id,
       perfil: q.perfil,
       ativo: q.ativo,
@@ -50,8 +52,12 @@ export class ColaboradoresController {
   }
 
   @Get(":id")
-  obter(@Param("id", new ParseUUIDPipe()) id: string) {
-    return this.service.obter(id);
+  async obter(@CurrentUser() user: RequestUser, @Param("id", new ParseUUIDPipe()) id: string) {
+    const c = await this.service.obter(id);
+    if (user.perfil === "gestor" && c.setor_id !== user.setor_id) {
+      throw new ForbiddenException({ code: "ACESSO_NEGADO", message: "Fora do seu setor" });
+    }
+    return c;
   }
 
   @Roles("admin", "rh")

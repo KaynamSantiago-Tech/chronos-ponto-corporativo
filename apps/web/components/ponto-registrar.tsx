@@ -34,7 +34,8 @@ import {
   obterCoordenadasAtuais,
   type Coordenadas,
 } from "@/lib/geolocation";
-import { apiFetch, ApiRequestError } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
+import { formatarErroApi } from "@/lib/api-errors";
 
 type AcaoPonto = {
   tipo: TipoMarcacao;

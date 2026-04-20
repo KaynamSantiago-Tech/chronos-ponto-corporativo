@@ -111,9 +111,8 @@ export function MarcacaoManualDialog({ open, onOpenChange }: MarcacaoManualDialo
       onOpenChange(false);
     },
     onError: (err: unknown) => {
-      const msg =
-        err instanceof ApiRequestError ? err.message : "Erro ao registrar marcação";
-      toast.error("Falha ao registrar", msg);
+      const amigavel = formatarErroApi(err, "Falha ao registrar");
+      toast.error(amigavel.titulo, amigavel.descricao);
     },
   });
 

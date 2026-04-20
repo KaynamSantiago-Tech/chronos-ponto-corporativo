@@ -30,6 +30,11 @@ class ListarColaboradoresQueryDto extends PaginationDto {
   @IsOptional()
   @IsBoolean()
   ativo?: boolean;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  busca?: string;
 }
 
 @ApiBearerAuth()

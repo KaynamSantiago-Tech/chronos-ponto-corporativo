@@ -24,17 +24,62 @@ const TIPO_LABEL: Record<TipoMarcacao, string> = {
   pausa_fim: "Pausa finalizada",
 };
 
+const LIMITE_EXPORT = 5000;
+
 export default function HistoricoPage() {
+  const toast = useToast();
   const [inicio, setInicio] = useState<string>("");
   const [fim, setFim] = useState<string>("");
   const [page, setPage] = useState(1);
+  const [exportando, setExportando] = useState(false);
+
+  const filtrosIso = {
+    inicio: inicio ? new Date(inicio).toISOString() : undefined,
+    fim: fim ? new Date(fim).toISOString() : undefined,
+  } as const;
 
   const { data, isLoading, isError, error, refetch, isFetching } = useMarcacoesMe({
     page,
     page_size: 50,
-    inicio: inicio ? new Date(inicio).toISOString() : undefined,
-    fim: fim ? new Date(fim).toISOString() : undefined,
+    ...filtrosIso,
   });
+
+  async function exportarCsv() {
+    setExportando(true);
+    try {
+      const response = await apiFetch<Paginated<Marcacao>>("/marcacoes/me", {
+        query: { page: 1, page_size: LIMITE_EXPORT, ...filtrosIso },
+      });
+      if (response.items.length === 0) {
+        toast.info("Nada para exportar", "Ajuste os filtros e tente novamente.");
+        return;
+      }
+      if (response.total > LIMITE_EXPORT) {
+        toast.info(
+          "Export truncado",
+          `Mostrando primeiros ${LIMITE_EXPORT} de ${response.total} registros. Refine o filtro.`,
+        );
+      }
+      const csv = gerarCsv(response.items, [
+        { header: "Data/hora", value: (m) => formatDateTimePtBr(m.registrada_em) },
+        { header: "Tipo", value: (m) => TIPO_LABEL[m.tipo] ?? m.tipo },
+        { header: "Origem", value: (m) => m.origem },
+        { header: "Latitude", value: (m) => (m.latitude != null ? Number(m.latitude) : "") },
+        { header: "Longitude", value: (m) => (m.longitude != null ? Number(m.longitude) : "") },
+        { header: "Precisao (m)", value: (m) => m.precisao_m ?? "" },
+        { header: "Observacao", value: (m) => m.observacao ?? "" },
+      ]);
+      const hoje = new Date().toISOString().slice(0, 10);
+      baixarCsv(`meu_historico_${hoje}`, csv);
+      toast.success("Export concluído", `${response.items.length} registros exportados.`);
+    } catch (err) {
+      const msg =
+        err instanceof ApiRequestError ? err.message : "Falha ao exportar histórico";
+      toast.error("Erro no export", msg);
+    } finally {
+      setExportando(false);
+    }
+  }
 
   const total = data?.total ?? 0;
   const items = data?.items ?? [];

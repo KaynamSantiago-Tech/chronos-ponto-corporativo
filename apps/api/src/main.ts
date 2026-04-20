@@ -30,13 +30,17 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  const swagger = new DocumentBuilder()
-    .setTitle("Midrah Ponto API")
-    .setDescription("API interna de ponto corporativo")
-    .setVersion("0.1.0")
-    .addBearerAuth()
-    .build();
-  SwaggerModule.setup("docs", app, SwaggerModule.createDocument(app, swagger));
+  const exporSwagger =
+    process.env.NODE_ENV !== "production" || process.env.EXPOSE_SWAGGER === "true";
+  if (exporSwagger) {
+    const swagger = new DocumentBuilder()
+      .setTitle("Midrah Ponto API")
+      .setDescription("API interna de ponto corporativo")
+      .setVersion("0.1.0")
+      .addBearerAuth()
+      .build();
+    SwaggerModule.setup("docs", app, SwaggerModule.createDocument(app, swagger));
+  }
 
   const port = Number(process.env.PORT ?? 3333);
   await app.listen(port, "0.0.0.0");

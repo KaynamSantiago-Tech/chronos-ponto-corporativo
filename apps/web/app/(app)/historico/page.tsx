@@ -130,9 +130,25 @@ export default function HistoricoPage() {
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row items-center justify-between gap-3">
           <CardTitle>Marcações</CardTitle>
-          <span className="text-xs text-muted-foreground">{total} registro(s)</span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">{total} registro(s)</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportarCsv}
+              disabled={exportando || total === 0}
+              title="Exportar para CSV"
+            >
+              {exportando ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              Exportar
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {isLoading ? (

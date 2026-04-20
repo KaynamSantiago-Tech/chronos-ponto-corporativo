@@ -76,9 +76,8 @@ export default function HistoricoPage() {
       baixarCsv(`meu_historico_${hoje}`, csv);
       toast.success("Export concluído", `${response.items.length} registros exportados.`);
     } catch (err) {
-      const msg =
-        err instanceof ApiRequestError ? err.message : "Falha ao exportar histórico";
-      toast.error("Erro no export", msg);
+      const amigavel = formatarErroApi(err, "Falha ao exportar histórico");
+      toast.error(amigavel.titulo, amigavel.descricao);
     } finally {
       setExportando(false);
     }

@@ -127,6 +127,7 @@ export default function PontoRegistrar() {
   async function iniciarCamera() {
     if (cameraPronta || iniciandoCamera) return;
     setIniciandoCamera(true);
+    setCameraErro(null);
     try {
       const stream = await abrirCameraFrontal();
       streamRef.current = stream;
@@ -136,13 +137,35 @@ export default function PontoRegistrar() {
       }
       setCameraPronta(true);
     } catch (error) {
-      if (error instanceof CameraDeniedError) {
-        toast.error("Câmera indisponível", "Autorize o acesso à câmera para registrar ponto.");
-      } else {
-        toast.error("Falha na câmera", (error as Error).message);
-      }
+      const mensagem =
+        error instanceof CameraDeniedError
+          ? "Autorize o acesso à câmera nas configurações do navegador."
+          : (error as Error).message || "Não foi possível abrir a câmera.";
+      setCameraErro(mensagem);
+      toast.error("Câmera indisponível", mensagem);
     } finally {
       setIniciandoCamera(false);
+    }
+  }
+
+  async function verificarGps() {
+    setGpsStatus("verificando");
+    setGpsErro(null);
+    try {
+      const coords = await obterCoordenadasAtuais();
+      setGpsStatus("ok");
+      setGpsPrecisao(coords.precisao_m);
+    } catch (error) {
+      setGpsStatus("erro");
+      if (error instanceof GeolocationDeniedError) {
+        setGpsErro("Autorize o acesso à localização nas configurações do navegador.");
+      } else if (error instanceof GeolocationTimeoutError) {
+        setGpsErro("Tempo limite ao obter localização. Tente novamente próximo a uma janela.");
+      } else if (error instanceof GeolocationUnavailableError) {
+        setGpsErro(error.message);
+      } else {
+        setGpsErro((error as Error).message || "Falha ao obter localização.");
+      }
     }
   }
 

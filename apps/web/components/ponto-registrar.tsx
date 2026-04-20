@@ -233,13 +233,8 @@ export default function PontoRegistrar() {
       pararCamera();
     },
     onError: (error: unknown) => {
-      const mensagem =
-        error instanceof ApiRequestError
-          ? error.message
-          : error instanceof Error
-            ? error.message
-            : "Erro desconhecido";
-      toast.error("Não foi possível registrar", mensagem);
+      const amigavel = formatarErroApi(error, "Não foi possível registrar");
+      toast.error(amigavel.titulo, amigavel.descricao);
     },
     onSettled: () => {
       setAcaoEmAndamento(null);

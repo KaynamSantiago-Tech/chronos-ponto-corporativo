@@ -68,8 +68,20 @@ export class EvidenciasService {
 
     return {
       path,
-      evidencia_url: signed.signedUrl,
+      signed_url: signed.signedUrl,
       expires_in: 3600,
     };
+  }
+
+  async signedUrl(path: string, seconds = 3600) {
+    const storage = this.supabase.storage(this.bucket);
+    const { data, error } = await storage.createSignedUrl(path, seconds);
+    if (error || !data?.signedUrl) {
+      throw new BadRequestException({
+        code: "URL_ASSINADA_FALHOU",
+        message: "Não foi possível gerar URL assinada",
+      });
+    }
+    return { signed_url: data.signedUrl, expires_in: seconds };
   }
 }

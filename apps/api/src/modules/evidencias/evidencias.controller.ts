@@ -1,11 +1,12 @@
-import { Controller, Get, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { IsOptional, IsString, MaxLength } from "class-validator";
 
 import { CurrentUser, type RequestUser } from "../../common/decorators/current-user.decorator";
-import { Roles } from "../../common/decorators/roles.decorator";
 import { EvidenciasService } from "./evidencias.service";
+
+const PERFIS_COM_ACESSO_TOTAL = new Set(["admin", "rh", "gestor"]);
 
 class SignedUrlQueryDto {
   @IsString()

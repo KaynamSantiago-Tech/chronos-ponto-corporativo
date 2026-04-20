@@ -57,6 +57,8 @@ export class JwtAuthGuard implements CanActivate {
         nome: true,
         ativo: true,
         deleted_at: true,
+        setor_id: true,
+        unidade_id: true,
       },
     });
 

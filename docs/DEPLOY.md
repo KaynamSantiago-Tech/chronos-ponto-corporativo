@@ -153,7 +153,7 @@ Dashboards de acompanhamento:
 - [ ] `/ponto` pede GPS + câmera e registra uma entrada de ponta a ponta.
 - [ ] Selfie aparece em `/admin/marcacoes` via botão "Selfie".
 - [ ] Export CSV em `/admin/marcacoes` baixa o arquivo.
-- [ ] Sentry recebe erro forçado (`throw new Error('teste')` em rota debug temporária).
+- [ ] Sentry recebe erro forçado via `GET /debug/sentry` (admin autenticado; só responde fora de prod ou com `EXPOSE_DEBUG=true`).
 
 ## Troubleshooting
 

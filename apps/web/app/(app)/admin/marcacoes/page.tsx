@@ -179,9 +179,8 @@ export default function AdminMarcacoesPage() {
       baixarCsv(`marcacoes_${hoje}`, csv);
       toast.success("Export concluído", `${response.items.length} registros exportados.`);
     } catch (err) {
-      const msg =
-        err instanceof ApiRequestError ? err.message : "Falha ao exportar marcações";
-      toast.error("Erro no export", msg);
+      const amigavel = formatarErroApi(err, "Falha ao exportar marcações");
+      toast.error(amigavel.titulo, amigavel.descricao);
     } finally {
       setExportando(false);
     }

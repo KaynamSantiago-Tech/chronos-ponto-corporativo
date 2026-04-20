@@ -102,12 +102,22 @@ export default function AdminMarcacoesPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Marcações</h1>
-        <p className="text-sm text-muted-foreground">
-          Registros de ponto de todos os colaboradores.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">Marcações</h1>
+          <p className="text-sm text-muted-foreground">
+            Registros de ponto de todos os colaboradores.
+          </p>
+        </div>
+        <PermissionGate perfisPermitidos={["admin", "rh"]}>
+          <Button onClick={() => setManualAberto(true)}>
+            <PlusCircle className="h-4 w-4" />
+            Registro manual
+          </Button>
+        </PermissionGate>
       </div>
+
+      <MarcacaoManualDialog open={manualAberto} onOpenChange={setManualAberto} />
 
       <Card>
         <CardHeader>

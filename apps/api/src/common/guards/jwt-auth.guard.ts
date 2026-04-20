@@ -75,6 +75,8 @@ export class JwtAuthGuard implements CanActivate {
       perfil: colaborador.perfil as RequestUser["perfil"],
       email: colaborador.email,
       nome: colaborador.nome,
+      setor_id: colaborador.setor_id,
+      unidade_id: colaborador.unidade_id,
     };
     return true;
   }

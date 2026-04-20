@@ -46,6 +46,24 @@ export class RegistrarMarcacaoDto {
   observacao?: string;
 }
 
+export class RegistrarManualDto {
+  @IsUUID()
+  colaborador_id!: string;
+
+  @IsIn(TIPOS)
+  tipo!: TipoMarcacao;
+
+  @IsOptional()
+  @IsISO8601()
+  registrada_em?: string;
+
+  @IsNotEmpty({ message: "Justificativa é obrigatória" })
+  @IsString()
+  @MinLength(10, { message: "Justificativa muito curta (mínimo 10 caracteres)" })
+  @MaxLength(500)
+  observacao!: string;
+}
+
 export class ListarMarcacoesDto {
   @IsOptional()
   @IsUUID()

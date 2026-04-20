@@ -91,6 +91,12 @@ export default function PontoRegistrar() {
   const streamRef = useRef<MediaStream | null>(null);
   const [cameraPronta, setCameraPronta] = useState(false);
   const [iniciandoCamera, setIniciandoCamera] = useState(false);
+  const [cameraErro, setCameraErro] = useState<string | null>(null);
+  const [gpsStatus, setGpsStatus] = useState<"desconhecido" | "verificando" | "ok" | "erro">(
+    "desconhecido",
+  );
+  const [gpsErro, setGpsErro] = useState<string | null>(null);
+  const [gpsPrecisao, setGpsPrecisao] = useState<number | null>(null);
   const [acaoEmAndamento, setAcaoEmAndamento] = useState<TipoMarcacao | null>(null);
 
   const hojeQuery = useMarcacoesMe({ inicio: inicioDoDiaIso(), page_size: 20 });

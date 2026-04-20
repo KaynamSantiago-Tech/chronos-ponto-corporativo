@@ -62,9 +62,10 @@ export default function ColaboradoresPage() {
               Erro: {(error as Error).message}
             </div>
           ) : !data || data.items.length === 0 ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">
-              Nenhum colaborador cadastrado ainda.
-            </div>
+            <EmptyState
+              title="Nenhum colaborador cadastrado"
+              description="Clique em Novo colaborador para enviar o primeiro convite."
+            />
           ) : (
             <Table>
               <TableHeader>

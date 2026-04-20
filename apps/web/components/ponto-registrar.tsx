@@ -38,8 +38,9 @@ const ACOES: AcaoPonto[] = [
 ];
 
 interface UploadResponse {
-  evidencia_id: string;
-  url: string;
+  path: string;
+  signed_url: string;
+  expires_in: number;
 }
 
 export default function PontoRegistrar() {

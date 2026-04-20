@@ -28,25 +28,69 @@ interface MarcacaoAdmin extends Marcacao {
   colaborador_matricula?: string;
 }
 
+const LIMITE_EXPORT = 5000;
+
 export default function AdminMarcacoesPage() {
+  const toast = useToast();
   const [inicio, setInicio] = useState("");
   const [fim, setFim] = useState("");
   const [colaboradorId, setColaboradorId] = useState("");
   const [page, setPage] = useState(1);
+  const [exportando, setExportando] = useState(false);
+
+  const filtrosIso = {
+    inicio: inicio ? new Date(inicio).toISOString() : undefined,
+    fim: fim ? new Date(fim).toISOString() : undefined,
+    colaborador_id: colaboradorId || undefined,
+  } as const;
 
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ["admin-marcacoes", { page, inicio, fim, colaboradorId }],
     queryFn: () =>
       apiFetch<Paginated<MarcacaoAdmin>>("/marcacoes", {
-        query: {
-          page,
-          page_size: 50,
-          inicio: inicio ? new Date(inicio).toISOString() : undefined,
-          fim: fim ? new Date(fim).toISOString() : undefined,
-          colaborador_id: colaboradorId || undefined,
-        },
+        query: { page, page_size: 50, ...filtrosIso },
       }),
   });
+
+  async function exportarCsv() {
+    setExportando(true);
+    try {
+      const response = await apiFetch<Paginated<MarcacaoAdmin>>("/marcacoes", {
+        query: { page: 1, page_size: LIMITE_EXPORT, ...filtrosIso },
+      });
+      if (response.items.length === 0) {
+        toast.info("Nada para exportar", "Ajuste os filtros e tente novamente.");
+        return;
+      }
+      if (response.total > LIMITE_EXPORT) {
+        toast.info(
+          "Export truncado",
+          `Mostrando primeiros ${LIMITE_EXPORT} de ${response.total} registros. Refine o filtro.`,
+        );
+      }
+      const csv = gerarCsv(response.items, [
+        { header: "Data/hora", value: (m) => formatDateTimePtBr(m.registrada_em) },
+        { header: "Colaborador", value: (m) => m.colaborador_nome ?? m.colaborador_id },
+        { header: "Matricula", value: (m) => m.colaborador_matricula ?? "" },
+        { header: "Tipo", value: (m) => TIPO_LABEL[m.tipo] ?? m.tipo },
+        { header: "Origem", value: (m) => m.origem },
+        { header: "Latitude", value: (m) => (m.latitude != null ? Number(m.latitude) : "") },
+        { header: "Longitude", value: (m) => (m.longitude != null ? Number(m.longitude) : "") },
+        { header: "Precisao (m)", value: (m) => m.precisao_m ?? "" },
+        { header: "IP", value: (m) => m.ip ?? "" },
+        { header: "Observacao", value: (m) => m.observacao ?? "" },
+      ]);
+      const hoje = new Date().toISOString().slice(0, 10);
+      baixarCsv(`marcacoes_${hoje}`, csv);
+      toast.success("Export concluído", `${response.items.length} registros exportados.`);
+    } catch (err) {
+      const msg =
+        err instanceof ApiRequestError ? err.message : "Falha ao exportar marcações";
+      toast.error("Erro no export", msg);
+    } finally {
+      setExportando(false);
+    }
+  }
 
   const total = data?.total ?? 0;
   const items = data?.items ?? [];

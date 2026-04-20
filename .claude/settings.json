@@ -4,7 +4,9 @@
       "Bash(pnpm install *)",
       "Bash(where pnpm *)",
       "Bash(where node *)",
-      "Bash(where corepack *)"
+      "Bash(where corepack *)",
+      "Bash(pnpm --filter @midrah/web typecheck)",
+      "Bash(npx --yes -p typescript@5.5.4 tsc --noEmit -p apps/web/tsconfig.json)"
     ]
   }
 }

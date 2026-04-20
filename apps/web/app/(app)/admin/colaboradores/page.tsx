@@ -2,13 +2,15 @@
 
 import type { Colaborador, Paginated } from "@midrah/shared";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Pencil, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { Pencil, Search, UserPlus } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { ColaboradorFormDialog } from "@/components/admin/colaborador-form-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/ui/pagination";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { apiFetch } from "@/lib/api";
@@ -16,14 +18,33 @@ import { apiFetch } from "@/lib/api";
 export default function ColaboradoresPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Colaborador | null>(null);
+  const [busca, setBusca] = useState("");
+  const [buscaDebounced, setBuscaDebounced] = useState("");
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setBuscaDebounced(busca.trim());
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(id);
+  }, [busca]);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["colaboradores", { page: 1 }],
+    queryKey: ["colaboradores", { page, busca: buscaDebounced }],
     queryFn: () =>
       apiFetch<Paginated<Colaborador>>("/colaboradores", {
-        query: { page: 1, page_size: 50 },
+        query: {
+          page,
+          page_size: 50,
+          busca: buscaDebounced || undefined,
+        },
       }),
   });
+
+  const total = data?.total ?? 0;
+  const pageSize = data?.page_size ?? 50;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   const openNew = () => {
     setEditing(null);

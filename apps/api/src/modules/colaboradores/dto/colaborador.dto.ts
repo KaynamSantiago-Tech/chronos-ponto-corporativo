@@ -111,4 +111,9 @@ export class ListarColaboradoresDto {
   @IsOptional()
   @IsBoolean()
   ativo?: boolean;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  busca?: string;
 }

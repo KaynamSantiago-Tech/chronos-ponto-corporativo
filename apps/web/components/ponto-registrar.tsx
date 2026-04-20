@@ -179,12 +179,24 @@ export default function PontoRegistrar() {
       let coords: Coordenadas;
       try {
         coords = await obterCoordenadasAtuais();
+        setGpsStatus("ok");
+        setGpsPrecisao(coords.precisao_m);
+        setGpsErro(null);
       } catch (error) {
+        setGpsStatus("erro");
         if (error instanceof GeolocationDeniedError) {
-          throw new Error("Autorize o acesso à localização para registrar ponto.");
+          const msg = "Autorize o acesso à localização nas configurações do navegador.";
+          setGpsErro(msg);
+          throw new Error(msg);
         }
         if (error instanceof GeolocationTimeoutError) {
-          throw new Error("Tempo limite ao obter localização. Tente novamente.");
+          const msg = "Tempo limite ao obter localização. Tente novamente próximo a uma janela.";
+          setGpsErro(msg);
+          throw new Error(msg);
+        }
+        if (error instanceof GeolocationUnavailableError) {
+          setGpsErro(error.message);
+          throw error;
         }
         throw error;
       }

@@ -13,11 +13,11 @@ export class EvidenciasController {
 
   @Post("upload")
   @ApiConsumes("multipart/form-data")
-  @UseInterceptors(FileInterceptor("file", { limits: { fileSize: 2 * 1024 * 1024 } }))
+  @UseInterceptors(FileInterceptor("arquivo", { limits: { fileSize: 2 * 1024 * 1024 } }))
   upload(
     @CurrentUser() user: RequestUser,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() arquivo: Express.Multer.File,
   ) {
-    return this.service.upload(user.colaborador_id, file);
+    return this.service.upload(user.colaborador_id, arquivo);
   }
 }

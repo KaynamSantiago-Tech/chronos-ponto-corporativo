@@ -44,6 +44,8 @@ export default function AdminMarcacoesPage() {
   const [inicio, setInicio] = useState("");
   const [fim, setFim] = useState("");
   const [colaboradorId, setColaboradorId] = useState("");
+  const [colaboradorBusca, setColaboradorBusca] = useState("");
+  const [colaboradorBuscaDeb, setColaboradorBuscaDeb] = useState("");
   const [unidadeId, setUnidadeId] = useState("");
   const [setorId, setSetorId] = useState("");
   const [tipo, setTipo] = useState("");

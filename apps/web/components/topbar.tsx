@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, UserRound } from "lucide-react";
+import { LogOut, Menu, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,11 @@ import { useToast } from "@/components/ui/toast";
 import { useColaboradorAtual } from "@/hooks/use-colaborador-atual";
 import { useSupabase } from "@/hooks/use-supabase";
 
-export default function Topbar() {
+interface TopbarProps {
+  onAbrirMenu?: () => void;
+}
+
+export default function Topbar({ onAbrirMenu }: TopbarProps = {}) {
   const supabase = useSupabase();
   const router = useRouter();
   const toast = useToast();

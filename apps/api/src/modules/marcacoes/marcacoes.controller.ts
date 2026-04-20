@@ -53,6 +53,20 @@ export class MarcacoesController {
     return this.service.meuHistorico(user.colaborador_id, page.page, page.page_size, inicio, fim);
   }
 
+  @Roles("admin", "rh")
+  @Post("manual")
+  registrarManual(
+    @CurrentUser() user: RequestUser,
+    @Body() dto: RegistrarManualDto,
+    @Ip() ip: string,
+    @Req() req: Request,
+  ) {
+    return this.service.registrarManual(user.colaborador_id, dto, {
+      ip,
+      user_agent: req.headers["user-agent"],
+    });
+  }
+
   @Roles("admin", "rh", "gestor")
   @Get()
   listar(

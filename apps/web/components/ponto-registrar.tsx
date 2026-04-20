@@ -38,6 +38,34 @@ const ACOES: AcaoPonto[] = [
   { tipo: TipoMarcacao.SAIDA, label: "Saída", icon: LogOut, variant: "destructive" },
 ];
 
+const PROXIMAS: Record<TipoMarcacao | "none", TipoMarcacao[]> = {
+  none: [TipoMarcacao.ENTRADA],
+  entrada: [TipoMarcacao.SAIDA, TipoMarcacao.PAUSA_INICIO],
+  pausa_inicio: [TipoMarcacao.PAUSA_FIM],
+  pausa_fim: [TipoMarcacao.SAIDA, TipoMarcacao.PAUSA_INICIO],
+  saida: [],
+};
+
+function inicioDoDiaIso(): string {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d.toISOString();
+}
+
+function formatHora(iso: string): string {
+  return new Date(iso).toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+const ROTULO_TIPO: Record<TipoMarcacao, string> = {
+  entrada: "entrada",
+  saida: "saída",
+  pausa_inicio: "início de pausa",
+  pausa_fim: "retorno da pausa",
+};
+
 interface UploadResponse {
   path: string;
   signed_url: string;

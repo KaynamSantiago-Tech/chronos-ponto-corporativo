@@ -154,27 +154,7 @@ export default function LogsPage() {
                   </TableBody>
                 </Table>
 
-                <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-                  <span>
-                    Página {page} de {totalPages}
-                  </span>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
-                      disabled={page <= 1}
-                    >
-                      Anterior
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                      disabled={page >= totalPages}
-                    >
-                      Próxima
-                    </Button>
-                  </div>
-                </div>
+                <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
               </>
             )}
           </CardContent>

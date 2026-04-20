@@ -97,6 +97,8 @@ Quando loga pela primeira vez, o frontend chama **`POST /auth/sync` (rota públi
 
 Depois do primeiro `/auth/sync`, todas as rotas autenticadas passam a funcionar normalmente via `JwtAuthGuard`, que exige tanto o JWT válido quanto o colaborador vinculado e ativo.
 
+**Recuperação de senha:** a partir de `/login` o usuário acessa `/esqueci-senha` e recebe um link Supabase que abre `/nova-senha`. O middleware não intercepta essas rotas; a sessão de recovery é tratada pelo SDK e derrubada via `signOut()` após a troca.
+
 Erros esperados em `/auth/sync`:
 
 | Código                       | Quando acontece                                           |

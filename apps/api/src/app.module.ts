@@ -42,6 +42,7 @@ import { UnidadesModule } from "./modules/unidades/unidades.module";
     ThrottlerModule.forRoot([
       { name: "default", ttl: 60_000, limit: 100 },
       { name: "marcacao", ttl: 10_000, limit: 1 },
+      { name: "auth", ttl: 60_000, limit: 10 },
     ]),
     PrismaModule,
     SupabaseModule,

@@ -386,7 +386,12 @@ export default function AdminMarcacoesPage() {
                   {items.map((m) => (
                     <TableRow key={m.id}>
                       <TableCell className="font-mono text-xs">
-                        {formatDateTimePtBr(m.registrada_em)}
+                        <Link
+                          href={`/admin/marcacoes/${m.id}`}
+                          className="text-primary hover:underline"
+                        >
+                          {formatDateTimePtBr(m.registrada_em)}
+                        </Link>
                       </TableCell>
                       <TableCell className="text-sm">
                         {m.colaborador_nome ?? m.colaborador_id}

@@ -244,13 +244,31 @@ export default function AdminMarcacoesPage() {
               </Select>
             </div>
             <div className="flex flex-col gap-1">
-              <Label htmlFor="colaborador">Colaborador ID</Label>
+              <Label htmlFor="colaborador">Colaborador</Label>
               <Input
                 id="colaborador"
-                placeholder="UUID opcional"
-                value={colaboradorId}
-                onChange={(e) => setColaboradorId(e.target.value)}
+                list="colaboradores-opcoes"
+                placeholder="Busque por nome, matrícula ou email"
+                value={colaboradorBusca}
+                onChange={(e) => {
+                  setColaboradorBusca(e.target.value);
+                  const match = colaboradoresOptions.find(
+                    (c) => `${c.nome} (${c.matricula})` === e.target.value,
+                  );
+                  setColaboradorId(match?.id ?? "");
+                }}
+                className="min-w-[240px]"
               />
+              <datalist id="colaboradores-opcoes">
+                {colaboradoresOptions.map((c) => (
+                  <option key={c.id} value={`${c.nome} (${c.matricula})`} />
+                ))}
+              </datalist>
+              {colaboradorBusca && !colaboradorId ? (
+                <span className="text-xs text-muted-foreground">
+                  Selecione um colaborador da lista para aplicar o filtro.
+                </span>
+              ) : null}
             </div>
             <Button type="submit" disabled={isFetching}>
               {isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : null}

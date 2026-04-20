@@ -29,18 +29,28 @@ export default function Topbar({ onAbrirMenu }: TopbarProps = {}) {
 
   return (
     <header className="flex h-14 items-center justify-between border-b border-border bg-card/40 px-4">
-      <div className="text-sm text-muted-foreground">
-        {colaborador ? `Olá, ${colaborador.nome.split(" ")[0]}` : "Carregando..."}
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onAbrirMenu}
+          className="rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
+          aria-label="Abrir menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <div className="text-sm text-muted-foreground">
+          {colaborador ? `Olá, ${colaborador.nome.split(" ")[0]}` : "Carregando..."}
+        </div>
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs">
+        <div className="hidden items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs sm:flex">
           <UserRound className="h-3.5 w-3.5" />
           <span className="capitalize">{colaborador?.perfil ?? "—"}</span>
         </div>
         <Button variant="ghost" size="sm" onClick={handleSair}>
           <LogOut className="h-4 w-4" />
-          Sair
+          <span className="hidden sm:inline">Sair</span>
         </Button>
       </div>
     </header>

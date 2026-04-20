@@ -1,5 +1,6 @@
 import { Controller, Get, Headers, Post } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Throttle } from "@nestjs/throttler";
 
 import { CurrentUser, type RequestUser } from "../../common/decorators/current-user.decorator";
 import { Public } from "../../common/decorators/public.decorator";
@@ -16,6 +17,7 @@ export class AuthController {
    * A partir daqui, as demais rotas autenticadas passam a funcionar.
    */
   @Public()
+  @Throttle({ auth: { ttl: 60_000, limit: 10 } })
   @Post("sync")
   sync(@Headers("authorization") authorization?: string) {
     return this.service.sync(authorization);

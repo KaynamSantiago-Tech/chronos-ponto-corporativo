@@ -63,19 +63,9 @@ export default function LoginPage() {
     try {
       await apiFetch("/auth/sync", { method: "POST" });
     } catch (err) {
-      if (err instanceof ApiRequestError) {
-        const mensagem =
-          err.code === "COLABORADOR_NAO_CADASTRADO"
-            ? "Seu email ainda não está cadastrado no sistema. Procure o RH."
-            : err.code === "VINCULO_CONFLITO"
-              ? "Conta já vinculada a outro usuário. Procure o administrador."
-              : err.message;
-        await supabase.auth.signOut();
-        toast.error("Não foi possível concluir o login", mensagem);
-        return;
-      }
       await supabase.auth.signOut();
-      toast.error("Não foi possível concluir o login", "Erro inesperado.");
+      const amigavel = formatarErroApi(err, "Não foi possível concluir o login");
+      toast.error(amigavel.titulo, amigavel.descricao);
       return;
     }
 

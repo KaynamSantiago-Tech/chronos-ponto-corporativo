@@ -2,7 +2,18 @@
 
 import { TipoMarcacao, type Marcacao } from "@midrah/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Camera, Loader2, LogIn, LogOut, PauseCircle, PlayCircle } from "lucide-react";
+import {
+  AlertCircle,
+  Camera,
+  CheckCircle2,
+  Loader2,
+  LogIn,
+  LogOut,
+  MapPin,
+  PauseCircle,
+  PlayCircle,
+  RefreshCw,
+} from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +30,7 @@ import { cn } from "@/lib/cn";
 import {
   GeolocationDeniedError,
   GeolocationTimeoutError,
+  GeolocationUnavailableError,
   obterCoordenadasAtuais,
   type Coordenadas,
 } from "@/lib/geolocation";

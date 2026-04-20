@@ -72,7 +72,7 @@ Falta: testes de integração end-to-end (sugeridos apenas após decisão sobre 
 3. **Executar checklist pré-piloto** listado em `docs/DEPLOY.md`.
 4. **Ativar Sentry** (DSN em ambas env vars) e validar com erro forçado.
 5. **Revisão de segurança pontual** via `security-reviewer` antes de liberar fora do piloto (foco: políticas RLS do bucket, retention de evidências, LGPD).
-6. **Lifecycle de evidências** (>90 dias) — `integration-specialist` ou `devops-deploy` desenhar job de arquivamento.
+6. **Lifecycle de evidências** (>90 dias) — esboço em `docs/EVIDENCIAS-LIFECYCLE.md`; `integration-specialist` ou `devops-deploy` implementar o job.
 7. **Testes de integração** com container Postgres descartável (Testcontainers) — cobrir `/auth/sync`, `POST /marcacoes`, `POST /marcacoes/manual`.
 
 ## Decisões não óbvias (contexto para quem assume o código)

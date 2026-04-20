@@ -34,6 +34,12 @@ const MENU: MenuItem[] = [
 
 const MENU_ADMIN: MenuItem[] = [
   {
+    label: "Visão geral",
+    href: "/admin",
+    icon: BarChart3,
+    perfis: ["admin", "rh", "gestor"],
+  },
+  {
     label: "Colaboradores",
     href: "/admin/colaboradores",
     icon: Users,

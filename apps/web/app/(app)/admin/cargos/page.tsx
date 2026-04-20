@@ -64,9 +64,7 @@ export default function CargosPage() {
           ) : isError ? (
             <div className="text-sm text-destructive">Erro: {(error as Error).message}</div>
           ) : !data || data.items.length === 0 ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">
-              Nenhum cargo cadastrado.
-            </div>
+            <EmptyState title="Nenhum cargo cadastrado" />
           ) : (
             <Table>
               <TableHeader>

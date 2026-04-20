@@ -49,6 +49,7 @@ Guia operacional para colocar o sistema no ar. Um ambiente de **staging** (pilot
 | `ROLETA_WEBHOOK_SECRET` | ✅ | string aleatória ≥ 32 chars |
 | `PORT` | opcional | Railway injeta automaticamente; default 3333 |
 | `NODE_ENV` | ✅ | `production` |
+| `EXPOSE_SWAGGER` | opcional | `true` reabre `/docs` em produção (default: bloqueado) |
 
 ### `apps/web` (Vercel)
 

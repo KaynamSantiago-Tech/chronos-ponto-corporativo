@@ -36,7 +36,9 @@ export async function middleware(req: NextRequest) {
 
   const { pathname } = req.nextUrl;
 
-  const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/recuperar-senha");
+  const isLogin = pathname.startsWith("/login");
+  const isRecoveryFlow =
+    pathname.startsWith("/esqueci-senha") || pathname.startsWith("/nova-senha");
   const isPublicApi = pathname.startsWith("/api/health");
   const isStatic =
     pathname.startsWith("/_next") ||
@@ -44,9 +46,14 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/icons") ||
     pathname.startsWith("/images");
 
-  if (isAuthRoute || isPublicApi || isStatic) {
-    // Se já autenticado e tenta entrar em /login, manda para /dashboard.
-    if (session && isAuthRoute) {
+  // Recovery flow nunca é bloqueado: o link do email chega com token em hash e
+  // Supabase emite sessão temporária (PASSWORD_RECOVERY) que não deve redirecionar.
+  if (isRecoveryFlow || isPublicApi || isStatic) {
+    return res;
+  }
+
+  if (isLogin) {
+    if (session) {
       const url = req.nextUrl.clone();
       url.pathname = "/dashboard";
       return NextResponse.redirect(url);

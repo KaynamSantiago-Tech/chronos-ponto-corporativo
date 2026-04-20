@@ -64,9 +64,7 @@ export default function UnidadesPage() {
           ) : isError ? (
             <div className="text-sm text-destructive">Erro: {(error as Error).message}</div>
           ) : !data || data.items.length === 0 ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">
-              Nenhuma unidade cadastrada.
-            </div>
+            <EmptyState title="Nenhuma unidade cadastrada" />
           ) : (
             <Table>
               <TableHeader>

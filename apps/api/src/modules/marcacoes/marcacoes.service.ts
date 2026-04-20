@@ -155,12 +155,20 @@ export class MarcacoesService {
     return { items, total, page, page_size: pageSize };
   }
 
-  async obter(id: string) {
+  async obter(
+    id: string,
+    escopo?: { perfil: "admin" | "rh" | "gestor" | "colaborador"; setor_id: string },
+  ) {
     const m = await this.prisma.marcacao.findUnique({
       where: { id },
-      include: { colaborador: { select: { id: true, nome: true, matricula: true } } },
+      include: {
+        colaborador: { select: { id: true, nome: true, matricula: true, setor_id: true } },
+      },
     });
     if (!m) throw new NotFoundException({ code: "NOT_FOUND", message: "Marcação não encontrada" });
+    if (escopo?.perfil === "gestor" && m.colaborador?.setor_id !== escopo.setor_id) {
+      throw new NotFoundException({ code: "NOT_FOUND", message: "Marcação não encontrada" });
+    }
     return m;
   }
 }

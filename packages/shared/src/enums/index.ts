@@ -20,6 +20,7 @@ export type TipoMarcacao = (typeof TipoMarcacao)[keyof typeof TipoMarcacao];
 export const OrigemMarcacao = {
   WEB: "web",
   ROLETA: "roleta",
+  MANUAL: "manual",
 } as const;
 
 export type OrigemMarcacao = (typeof OrigemMarcacao)[keyof typeof OrigemMarcacao];

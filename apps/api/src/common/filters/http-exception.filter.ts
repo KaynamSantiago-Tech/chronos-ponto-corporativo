@@ -34,6 +34,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
         `${req.method} ${req.url} → ${statusCode}: ${message}`,
         exception instanceof Error ? exception.stack : undefined,
       );
+      if (exception instanceof Error) {
+        Sentry.captureException(exception, {
+          tags: { path: req.url, method: req.method },
+        });
+      }
     }
 
     const body: ErrorShape = {

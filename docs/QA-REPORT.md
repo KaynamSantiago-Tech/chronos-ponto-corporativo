@@ -42,6 +42,17 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - **Export CSV no histórico próprio** — colaborador baixa o próprio ponto sem depender do RH.
 - **EmptyState padronizado** em 7 listagens (histórico + 6 admin), tom consistente e call-to-action quando faz sentido.
 
+### Ciclo de polimento (2026-04-22)
+
+- **Busca server-side + paginação em `/admin/colaboradores`** — input debounced (300 ms) casa com `contains insensitive` em `nome`, `matricula` e `email`; elimina limite de 50 resultados.
+- **Filtros avançados em `/admin/marcacoes`** — selects de unidade/setor (cascading), tipo e picker de colaborador com datalist; botão "Limpar" reseta tudo.
+- **Persistência de filtros via URL** em `/admin/marcacoes` — estado sincronizado com `useSearchParams` + `router.replace`, permitindo compartilhar links filtrados.
+- **Tela de detalhe** `/admin/marcacoes/[id]` — mostra colaborador/setor/unidade, coordenadas com link para Google Maps, precisão GPS, IP, user-agent, observação e preview de selfie.
+- **Responsividade mobile** — `components/app-shell.tsx` novo, sidebar vira drawer (`md:hidden` fixed inset-0 com overlay) acionado por hambúrguer na topbar; badge de perfil e label "Sair" colapsam em telas pequenas.
+- **Helper `formatarErroApi`** (`lib/api-errors.ts`) mapeia 20+ códigos do backend (NO_TOKEN, SEQUENCIA_INVALIDA, ARQUIVO_GRANDE, PERFIL_INSUFICIENTE, 429 etc.) para `{ titulo, descricao }` acionáveis; aplicado em 10 call-sites (login, /ponto, /historico, dialogs CRUD, preview selfie, /admin/marcacoes).
+- **UX de `/ponto` melhorada** — status inline persistente de câmera e GPS com botões de retry explícitos; nova `GeolocationUnavailableError` trata caso "indoor" separadamente de timeout/permissão.
+- **Seed com orientação** — log ao final instrui criar o usuário correspondente no Supabase Auth com mesmo email para vincular via `/auth/sync`.
+
 ## Testes automatizados
 
 `apps/api/src/modules/marcacoes/marcacoes.service.spec.ts` — 14 casos:

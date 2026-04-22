@@ -59,9 +59,10 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 
 ## Testes automatizados
 
-`apps/api/src/modules/marcacoes/marcacoes.service.spec.ts` — 14 casos:
+`apps/api/src/modules/marcacoes/marcacoes.service.spec.ts` — 16 casos:
 - 7 para `validarSequencia` (transições entrada/pausa/saída).
 - 4 para `registrarManual` (origem, backfill, colaborador inexistente, bypass de sequência).
+- 2 para `registrar` (mapeamento de campos com `Prisma.Decimal` em lat/long, fallback para nulls quando GPS ausente).
 - 3 para `listar` com escopo de perfil.
 
 `apps/api/src/modules/roleta/roleta.controller.spec.ts` — 7 casos:

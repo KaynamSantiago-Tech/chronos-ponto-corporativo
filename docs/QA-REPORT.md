@@ -79,6 +79,10 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - Rejeita path traversal (`A/../B/...`), path profundo, path sem pasta e path vazio.
 - Clampa `seconds` ao intervalo [60, 3600].
 
+`apps/api/src/modules/auth/auth.service.spec.ts` — 10 casos:
+- Cobre todos os 8 códigos de erro (`NO_TOKEN`, `INVALID_TOKEN`, `SEM_EMAIL`, `COLABORADOR_NAO_CADASTRADO`, `COLABORADOR_INATIVO`, `VINCULO_CONFLITO`, `AUTH_USER_EM_USO` via P2002) e 2 happy paths (primeiro login vincula `auth_user_id`, recorrente pula update).
+- Normaliza email do token para lowercase antes da busca — impede impersonação via variação de caixa.
+
 Falta: testes de integração end-to-end (sugeridos apenas após decisão sobre banco de teste — SQLite in-memory ou container PG descartável).
 
 ## Riscos e mitigações atualizadas

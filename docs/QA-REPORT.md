@@ -99,7 +99,13 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - `atualizar`: 404 quando colaborador não existe; `P2002` vira `COLABORADOR_DUPLICADO` ao tentar trocar email para um já em uso.
 - `remover` (soft delete): marca `deleted_at` + `ativo=false` sem `DELETE` físico; 404 em colaborador inexistente sem chamar `update`.
 
-Total: 64 casos em 7 specs cobrindo auth, marcações (sequência + listagem escopada + happy path), colaboradores (CRUD + busca), guards (RBAC), interceptor (LGPD), evidências (URL assinada) e roleta (HMAC).
+`apps/api/src/modules/evidencias/evidencias.service.spec.ts` — 13 casos:
+- Validação de entrada: `ARQUIVO_AUSENTE`, `ARQUIVO_GRANDE` (>2 MB), `MIME_INVALIDO` (fora da whitelist JPEG/PNG/WebP); aceitação explícita dos 3 MIMEs com extensão correta (`jpg`/`png`/`webp`).
+- Construção do path: prefixado com `colaborador_id/`, nome `timestamp_uuid-v4.<ext>`, uploads consecutivos geram paths distintos; `upsert:false` e `contentType` preservado.
+- Erros do Supabase: `UPLOAD_FALHOU` quando Storage retorna erro; `URL_ASSINADA_FALHOU` quando `createSignedUrl` falha; happy path retorna `{ path, signed_url, expires_in: 3600 }`.
+- `signedUrl`: default 3600 s, respeita `seconds` custom, propaga `URL_ASSINADA_FALHOU`.
+
+Total: 77 casos em 8 specs cobrindo auth, marcações (sequência + listagem escopada + happy path), colaboradores (CRUD + busca), evidências (upload + URL assinada), guards (RBAC), interceptor (LGPD), controller de evidências (autorização) e roleta (HMAC).
 
 Falta: testes de integração end-to-end (sugeridos apenas após decisão sobre banco de teste — SQLite in-memory ou container PG descartável).
 

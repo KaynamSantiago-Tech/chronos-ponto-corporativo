@@ -1,9 +1,8 @@
-// Flat config mínima para ESLint 9. Foco em TypeScript sem regras pesadas —
-// a qualidade é garantida principalmente por `pnpm typecheck` + testes.
-import js from "@eslint/js";
+// Flat config mínima para ESLint 9 sem plugins externos — depende só do pacote
+// `eslint` que já está em devDependencies. Regras fortes são cobertas por
+// `pnpm typecheck` + vitest; aqui cuidamos de rastros básicos.
 
 export default [
-  js.configs.recommended,
   {
     files: ["src/**/*.ts"],
     languageOptions: {
@@ -30,6 +29,6 @@ export default [
     },
   },
   {
-    ignores: ["dist/**", "node_modules/**", "prisma/migrations/**", "*.spec.ts"],
+    ignores: ["dist/**", "node_modules/**", "prisma/migrations/**", "**/*.spec.ts"],
   },
 ];

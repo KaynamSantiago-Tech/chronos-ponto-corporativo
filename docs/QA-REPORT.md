@@ -2,7 +2,7 @@
 
 Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + deploy inicial.
 
-Última atualização: 2026-04-20.
+Última atualização: 2026-04-22.
 
 ---
 

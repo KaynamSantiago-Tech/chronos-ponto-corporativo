@@ -28,6 +28,8 @@ export interface Marcacao {
   evidencia_url: string | null;
   origem: OrigemMarcacao;
   observacao: string | null;
+  ip?: string | null;
+  user_agent?: string | null;
   created_at: string;
 }
 

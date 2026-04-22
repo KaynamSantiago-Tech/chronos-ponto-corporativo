@@ -93,6 +93,14 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - Limita profundidade a 4 níveis (proteção contra loops/estruturas adversariais).
 - Não muta o body original.
 
+`apps/api/src/modules/colaboradores/colaboradores.service.spec.ts` — 10 casos:
+- `listar` busca: sem termo não adiciona `OR`; com termo usa `contains insensitive` em `nome`/`matricula`/`email`; termo em branco (apenas espaços) é ignorado.
+- `criar`: happy path cria colaborador, envia convite Supabase e grava `auth_user_id` retornado; convite com falha (ex.: SMTP) não trava criação; `P2002` do Prisma é traduzido em `COLABORADOR_DUPLICADO` (409).
+- `atualizar`: 404 quando colaborador não existe; `P2002` vira `COLABORADOR_DUPLICADO` ao tentar trocar email para um já em uso.
+- `remover` (soft delete): marca `deleted_at` + `ativo=false` sem `DELETE` físico; 404 em colaborador inexistente sem chamar `update`.
+
+Total: 64 casos em 7 specs cobrindo auth, marcações (sequência + listagem escopada + happy path), colaboradores (CRUD + busca), guards (RBAC), interceptor (LGPD), evidências (URL assinada) e roleta (HMAC).
+
 Falta: testes de integração end-to-end (sugeridos apenas após decisão sobre banco de teste — SQLite in-memory ou container PG descartável).
 
 ## Riscos e mitigações atualizadas

@@ -66,6 +66,11 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - Rejeita assinaturas de comprimento diferente sem crash (guarda contra `timingSafeEqual`).
 - Detecta adulteração de payload (replay com corpo alterado).
 
+`apps/api/src/common/guards/roles.guard.spec.ts` — 7 casos:
+- Libera rotas sem `@Roles()` ou com lista vazia.
+- Bloqueia request sem perfil (`SEM_PERFIL`) e perfil fora da lista (`PERFIL_INSUFICIENTE`).
+- Libera combinações admin/rh e bloqueia gestor em rota restrita a admin.
+
 Falta: testes de integração end-to-end (sugeridos apenas após decisão sobre banco de teste — SQLite in-memory ou container PG descartável).
 
 ## Riscos e mitigações atualizadas

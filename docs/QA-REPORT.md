@@ -52,6 +52,7 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - **Helper `formatarErroApi`** (`lib/api-errors.ts`) mapeia 20+ códigos do backend (NO_TOKEN, SEQUENCIA_INVALIDA, ARQUIVO_GRANDE, PERFIL_INSUFICIENTE, 429 etc.) para `{ titulo, descricao }` acionáveis; aplicado em 10 call-sites (login, /ponto, /historico, dialogs CRUD, preview selfie, /admin/marcacoes).
 - **UX de `/ponto` melhorada** — status inline persistente de câmera e GPS com botões de retry explícitos; nova `GeolocationUnavailableError` trata caso "indoor" separadamente de timeout/permissão.
 - **Seed com orientação** — log ao final instrui criar o usuário correspondente no Supabase Auth com mesmo email para vincular via `/auth/sync`.
+- **Defesa contra CSV injection (OWASP)** em `lib/csv.ts` — valores começando com `=`, `+`, `-`, `@`, `\t` ou `\r` são prefixados com `'` para impedir execução como fórmula em Excel/Google Sheets. Vetor provável: campo observacao.
 
 ## Testes automatizados
 

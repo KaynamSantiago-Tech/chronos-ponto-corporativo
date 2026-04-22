@@ -91,10 +91,17 @@ export default function ColaboradoresPage() {
               Erro: {(error as Error).message}
             </div>
           ) : !data || data.items.length === 0 ? (
-            <EmptyState
-              title="Nenhum colaborador cadastrado"
-              description="Clique em Novo colaborador para enviar o primeiro convite."
-            />
+            buscaDebounced ? (
+              <EmptyState
+                title="Nenhum resultado para a busca"
+                description={`Nada encontrado para "${buscaDebounced}". Ajuste o termo ou limpe a busca.`}
+              />
+            ) : (
+              <EmptyState
+                title="Nenhum colaborador cadastrado"
+                description="Clique em Novo colaborador para enviar o primeiro convite."
+              />
+            )
           ) : (
             <Table>
               <TableHeader>

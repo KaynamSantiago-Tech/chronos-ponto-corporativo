@@ -1,4 +1,4 @@
-import { Controller, ForbiddenException, Get, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Controller, ForbiddenException, Get, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { IsOptional, IsString, MaxLength } from "class-validator";
@@ -7,6 +7,9 @@ import { CurrentUser, type RequestUser } from "../../common/decorators/current-u
 import { EvidenciasService } from "./evidencias.service";
 
 const PERFIS_COM_ACESSO_TOTAL = new Set(["admin", "rh", "gestor"]);
+// Caminhos válidos: <uuid>/<timestamp>_<uuid>.<ext>. Proíbe `..`, `//`, barras
+// iniciais e caracteres de controle — evita path traversal na checagem de dono.
+const PATH_SEGURO = /^[A-Za-z0-9_-]+\/[A-Za-z0-9._-]+$/;
 
 class SignedUrlQueryDto {
   @IsString()
@@ -36,7 +39,14 @@ export class EvidenciasController {
 
   @Get("signed-url")
   signedUrl(@CurrentUser() user: RequestUser, @Query() query: SignedUrlQueryDto) {
-    const ehDoProprio = query.path.startsWith(`${user.colaborador_id}/`);
+    if (!PATH_SEGURO.test(query.path)) {
+      throw new BadRequestException({
+        code: "PATH_INVALIDO",
+        message: "Caminho de evidência inválido",
+      });
+    }
+    const [pastaDono] = query.path.split("/");
+    const ehDoProprio = pastaDono === user.colaborador_id;
     const temAcessoTotal = PERFIS_COM_ACESSO_TOTAL.has(user.perfil);
     if (!ehDoProprio && !temAcessoTotal) {
       throw new ForbiddenException({

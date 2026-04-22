@@ -13,6 +13,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declaration": false,
+    "declarationMap": false,
     "removeComments": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,

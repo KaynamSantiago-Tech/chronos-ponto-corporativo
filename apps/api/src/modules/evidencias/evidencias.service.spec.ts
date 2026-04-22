@@ -102,7 +102,7 @@ describe("EvidenciasService.upload — construção do path", () => {
 
     await service.upload("colab-123", file);
 
-    const [path] = storage.upload.mock.calls[0];
+    const [path] = storage.upload.mock.calls[0]!;
     // colab-123/<timestamp>_<uuid-v4>.jpg
     expect(path).toMatch(
       /^colab-123\/\d+_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.jpg$/,

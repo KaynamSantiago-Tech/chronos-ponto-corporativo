@@ -159,6 +159,55 @@ describe("MarcacoesService.registrarManual", () => {
   });
 });
 
+describe("MarcacoesService.registrar (happy path)", () => {
+  it("valida sequência, mapeia campos e grava com origem='web'", async () => {
+    const create = vi.fn().mockResolvedValue({ id: "m1" });
+    const { service } = makeService(null, {
+      marcacao: { findFirst: vi.fn().mockResolvedValue(null), create },
+    });
+
+    await service.registrar(
+      "colab-1",
+      {
+        tipo: "entrada",
+        latitude: -23.5505,
+        longitude: -46.6333,
+        precisao_m: 12.4,
+        evidencia_url: "colab-1/123_abc.jpg",
+      },
+      { ip: "10.0.0.1", user_agent: "Mozilla/5.0" },
+    );
+
+    expect(create).toHaveBeenCalledOnce();
+    const data = create.mock.calls[0][0].data;
+    expect(data.colaborador_id).toBe("colab-1");
+    expect(data.tipo).toBe("entrada");
+    expect(data.origem).toBe("web");
+    expect(data.ip).toBe("10.0.0.1");
+    expect(data.user_agent).toBe("Mozilla/5.0");
+    expect(data.evidencia_url).toBe("colab-1/123_abc.jpg");
+    // Prisma.Decimal — verificar que lat/long foram empacotados, sem NaN.
+    expect(data.latitude?.toString()).toBe("-23.5505");
+    expect(data.longitude?.toString()).toBe("-46.6333");
+    expect(data.precisao_m).toBe(12.4);
+  });
+
+  it("permite lat/long ausentes (casos sem GPS, origem ainda 'web')", async () => {
+    const create = vi.fn().mockResolvedValue({ id: "m2" });
+    const { service } = makeService(null, {
+      marcacao: { findFirst: vi.fn().mockResolvedValue(null), create },
+    });
+
+    await service.registrar("colab-1", { tipo: "entrada" }, {});
+    const data = create.mock.calls[0][0].data;
+    expect(data.latitude).toBeNull();
+    expect(data.longitude).toBeNull();
+    expect(data.precisao_m).toBeNull();
+    expect(data.ip).toBeNull();
+    expect(data.user_agent).toBeNull();
+  });
+});
+
 describe("MarcacoesService.listar (escopo)", () => {
   function makeListar() {
     const findMany = vi.fn().mockResolvedValue([]);

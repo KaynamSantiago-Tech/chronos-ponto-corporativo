@@ -328,12 +328,7 @@ export default function PontoRegistrar() {
               </p>
             </div>
             {gpsStatus !== "verificando" ? (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={verificarGps}
-                disabled={gpsStatus === "verificando"}
-              >
+              <Button size="sm" variant="outline" onClick={verificarGps}>
                 <RefreshCw className="h-3.5 w-3.5" /> Testar
               </Button>
             ) : null}

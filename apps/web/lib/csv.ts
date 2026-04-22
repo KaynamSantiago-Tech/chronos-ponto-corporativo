@@ -2,6 +2,11 @@
  * Gera CSV (UTF-8 com BOM para Excel) a partir de colunas e linhas.
  * Escape segue RFC 4180: valores com `,`, `"`, `\r` ou `\n` são envolvidos
  * em aspas duplas; aspas internas são duplicadas.
+ *
+ * Defesa contra CSV injection (OWASP): valores começando com `=`, `+`, `-`,
+ * `@`, tab ou CR são prefixados com aspa simples para que Excel/Google Sheets
+ * não interpretem como fórmula. O observacao do colaborador é o vetor mais
+ * provável, já que é texto livre.
  */
 export interface CsvColumn<T> {
   header: string;
@@ -9,9 +14,14 @@ export interface CsvColumn<T> {
 }
 
 export function gerarCsv<T>(linhas: T[], colunas: CsvColumn<T>[]): string {
+  const GATILHOS_FORMULA = /^[=+\-@\t\r]/;
+
   const escape = (raw: string | number | null | undefined): string => {
     if (raw === null || raw === undefined) return "";
-    const s = String(raw);
+    let s = String(raw);
+    if (GATILHOS_FORMULA.test(s)) {
+      s = `'${s}`;
+    }
     if (/[",\r\n]/.test(s)) {
       return `"${s.replace(/"/g, '""')}"`;
     }

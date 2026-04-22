@@ -38,7 +38,7 @@ export class EvidenciasController {
   }
 
   @Get("signed-url")
-  signedUrl(@CurrentUser() user: RequestUser, @Query() query: SignedUrlQueryDto) {
+  async signedUrl(@CurrentUser() user: RequestUser, @Query() query: SignedUrlQueryDto) {
     if (!PATH_SEGURO.test(query.path)) {
       throw new BadRequestException({
         code: "PATH_INVALIDO",

@@ -16,7 +16,10 @@ async function bootstrap() {
   app.useLogger(app.get(Logger));
   app.use(helmet());
   app.enableCors({
-    origin: process.env.CORS_ORIGIN?.split(",") ?? ["http://localhost:3000"],
+    origin:
+      process.env.CORS_ORIGIN?.split(",")
+        .map((o) => o.trim())
+        .filter(Boolean) ?? ["http://localhost:3000"],
     credentials: true,
   });
   app.setGlobalPrefix("");

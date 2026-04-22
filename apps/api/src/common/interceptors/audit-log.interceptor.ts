@@ -49,11 +49,22 @@ export class AuditLogInterceptor implements NestInterceptor {
     return m ? m[1] : null;
   }
 
-  private safePayload(body: unknown): object | null {
+  private safePayload(body: unknown, depth = 0): object | null {
     if (!body || typeof body !== "object") return null;
-    const clone: Record<string, unknown> = { ...(body as Record<string, unknown>) };
-    for (const key of Object.keys(clone)) {
-      if (/senha|password|token|secret/i.test(key)) clone[key] = "[redacted]";
+    if (depth > 4) return { "[redacted]": "profundidade máxima" };
+    const clone: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(body as Record<string, unknown>)) {
+      if (/senha|password|token|secret|authorization|cpf/i.test(key)) {
+        clone[key] = "[redacted]";
+      } else if (Array.isArray(value)) {
+        clone[key] = value.map((v) =>
+          v && typeof v === "object" ? this.safePayload(v, depth + 1) : v,
+        );
+      } else if (value && typeof value === "object") {
+        clone[key] = this.safePayload(value, depth + 1);
+      } else {
+        clone[key] = value;
+      }
     }
     return clone;
   }

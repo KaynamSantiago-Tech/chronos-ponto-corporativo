@@ -84,11 +84,11 @@ describe("EvidenciasService.upload — validações de entrada", () => {
   });
 
   it("aceita JPEG, PNG e WebP (3 MIMEs permitidos)", async () => {
-    for (const mime of ["image/jpeg", "image/png", "image/webp"]) {
+    for (const mime of ["image/jpeg", "image/png", "image/webp"] as const) {
       const { service, storage } = build();
       const file = makeFile({ mimetype: mime });
       await expect(service.upload("colab-1", file)).resolves.toBeDefined();
-      const [path] = storage.upload.mock.calls[0];
+      const [path] = storage.upload.mock.calls[0]!;
       const ext = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[mime];
       expect(path).toMatch(new RegExp(`\\.${ext}$`));
     }

@@ -53,6 +53,7 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - **UX de `/ponto` melhorada** — status inline persistente de câmera e GPS com botões de retry explícitos; nova `GeolocationUnavailableError` trata caso "indoor" separadamente de timeout/permissão.
 - **Seed com orientação** — log ao final instrui criar o usuário correspondente no Supabase Auth com mesmo email para vincular via `/auth/sync`.
 - **Defesa contra CSV injection (OWASP)** em `lib/csv.ts` — valores começando com `=`, `+`, `-`, `@`, `\t` ou `\r` são prefixados com `'` para impedir execução como fórmula em Excel/Google Sheets. Vetor provável: campo observacao.
+- **Hardening de autorização em `/evidencias/signed-url`** — `startsWith(colaborador_id + "/")` substituído por regex estrita `^[A-Za-z0-9_-]+/[A-Za-z0-9._-]+$` + split em `/`. Evita que um colaborador A peça URL assinada da evidência de B via path traversal (`A/../B/...`) ou prefixo colidindo (`A-longo/...` onde A é prefixo de A-longo).
 
 ## Testes automatizados
 

@@ -73,6 +73,10 @@ const MAPA_CODIGOS: Record<string, { titulo: string; descricao?: string }> = {
     titulo: "Não foi possível abrir a evidência",
     descricao: "Atualize a página e tente novamente.",
   },
+  PATH_INVALIDO: {
+    titulo: "Caminho inválido",
+    descricao: "A evidência referenciada tem formato inválido.",
+  },
   CARGO_DUPLICADO: {
     titulo: "Cargo duplicado",
     descricao: "Já existe um cargo com esse nome.",

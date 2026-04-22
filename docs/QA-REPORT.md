@@ -85,6 +85,13 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - Cobre todos os 8 códigos de erro (`NO_TOKEN`, `INVALID_TOKEN`, `SEM_EMAIL`, `COLABORADOR_NAO_CADASTRADO`, `COLABORADOR_INATIVO`, `VINCULO_CONFLITO`, `AUTH_USER_EM_USO` via P2002) e 2 happy paths (primeiro login vincula `auth_user_id`, recorrente pula update).
 - Normaliza email do token para lowercase antes da busca — impede impersonação via variação de caixa.
 
+`apps/api/src/common/interceptors/audit-log.interceptor.spec.ts` — 7 casos:
+- Redige chaves sensíveis (senha, password, token, secret, authorization, cpf).
+- Redige recursivamente em objetos aninhados e arrays de objetos.
+- Retorna `null` para não-objetos.
+- Limita profundidade a 4 níveis (proteção contra loops/estruturas adversariais).
+- Não muta o body original.
+
 Falta: testes de integração end-to-end (sugeridos apenas após decisão sobre banco de teste — SQLite in-memory ou container PG descartável).
 
 ## Riscos e mitigações atualizadas

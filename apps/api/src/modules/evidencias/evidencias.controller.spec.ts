@@ -13,16 +13,22 @@ function makeController() {
 }
 
 const USER_COLAB: RequestUser = {
-  sub: "sub-1",
+  auth_user_id: "auth-1",
   colaborador_id: "colab-A",
   perfil: "colaborador",
   email: "a@x.com",
+  nome: "Alice",
+  setor_id: "s1",
+  unidade_id: "u1",
 };
 const USER_ADMIN: RequestUser = {
-  sub: "sub-2",
+  auth_user_id: "auth-2",
   colaborador_id: "colab-Admin",
   perfil: "admin",
   email: "admin@x.com",
+  nome: "Adm",
+  setor_id: "s1",
+  unidade_id: "u1",
 };
 
 describe("EvidenciasController.signedUrl (autorização)", () => {

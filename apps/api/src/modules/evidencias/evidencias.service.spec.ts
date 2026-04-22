@@ -115,7 +115,7 @@ describe("EvidenciasService.upload — construção do path", () => {
 
     await service.upload("colab-1", file);
 
-    const [, buffer, options] = storage.upload.mock.calls[0];
+    const [, buffer, options] = storage.upload.mock.calls[0]!;
     expect(buffer).toBe(file.buffer);
     expect(options).toEqual({ contentType: "image/png", upsert: false });
   });

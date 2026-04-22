@@ -1,5 +1,7 @@
-import { createBrowserClient, createServerClient } from "@supabase/ssr";
+import { createBrowserClient, createServerClient, type CookieOptions } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+
+type CookieToSet = { name: string; value: string; options: CookieOptions };
 
 import { env } from "./env";
 

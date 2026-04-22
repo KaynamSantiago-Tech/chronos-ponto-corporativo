@@ -105,7 +105,34 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - Erros do Supabase: `UPLOAD_FALHOU` quando Storage retorna erro; `URL_ASSINADA_FALHOU` quando `createSignedUrl` falha; happy path retorna `{ path, signed_url, expires_in: 3600 }`.
 - `signedUrl`: default 3600 s, respeita `seconds` custom, propaga `URL_ASSINADA_FALHOU`.
 
-Total: 77 casos em 8 specs cobrindo auth, marcações (sequência + listagem escopada + happy path), colaboradores (CRUD + busca), evidências (upload + URL assinada), guards (RBAC), interceptor (LGPD), controller de evidências (autorização) e roleta (HMAC).
+`apps/api/src/modules/logs/logs.service.spec.ts` — 5 casos:
+- Paginação: `skip = (page-1)*pageSize`, `take`, `orderBy created_at desc`.
+- Filtro `ator_id` por igualdade; filtro `acao` com `contains` (substring match, não exato).
+- Intervalo de datas converte ISO em `Date` (`gte`/`lte`).
+- Envelope paginado consistente `{ items, total, page, page_size }`.
+
+`apps/api/src/modules/cargos/cargos.service.spec.ts` — 5 casos:
+- Listagem paginada com `orderBy nome asc`.
+- `obter` lança `NotFoundException` com `code: NOT_FOUND`.
+- `criar` traduz `P2002` em `CARGO_DUPLICADO` (409).
+- `atualizar` exige existência prévia (404).
+- `remover` é soft delete por `ativo=false` (model não tem `deleted_at`).
+
+`apps/api/src/modules/setores/setores.service.spec.ts` — 7 casos:
+- `listar` sem `unidade_id` usa `where` vazio; com `unidade_id` filtra por unidade.
+- Achata `include unidade` em `unidade_nome` no item retornado; retorna `null` quando a relação vem vazia.
+- `criar` traduz `P2002` em `SETOR_DUPLICADO` (409).
+- `atualizar` exige existência prévia (404).
+- `remover` marca `ativo=false`.
+
+`apps/api/src/modules/unidades/unidades.service.spec.ts` — 5 casos:
+- Listagem paginada com `orderBy nome asc`.
+- `obter` lança `NotFoundException`.
+- `criar` delega ao Prisma sem tratar `P2002` (nome de unidade não é unique).
+- `atualizar` exige existência prévia (404).
+- `remover` marca `ativo=false`.
+
+Total: 99 casos em 12 specs cobrindo auth, marcações (sequência + listagem escopada + happy path), colaboradores (CRUD + busca), evidências (upload + URL assinada), guards (RBAC), interceptor (LGPD), controller de evidências (autorização), roleta (HMAC), logs (filtros/paginação) e CRUDs administrativos (cargos/setores/unidades).
 
 Falta: testes de integração end-to-end (sugeridos apenas após decisão sobre banco de teste — SQLite in-memory ou container PG descartável).
 

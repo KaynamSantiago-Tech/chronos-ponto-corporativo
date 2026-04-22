@@ -60,6 +60,12 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - 4 para `registrarManual` (origem, backfill, colaborador inexistente, bypass de sequência).
 - 3 para `listar` com escopo de perfil.
 
+`apps/api/src/modules/roleta/roleta.controller.spec.ts` — 7 casos:
+- Aceita assinatura válida (com e sem prefixo `sha256=`).
+- Rejeita `ROLETA_NAO_CONFIGURADA`, `ASSINATURA_AUSENTE`, `ASSINATURA_INVALIDA`.
+- Rejeita assinaturas de comprimento diferente sem crash (guarda contra `timingSafeEqual`).
+- Detecta adulteração de payload (replay com corpo alterado).
+
 Falta: testes de integração end-to-end (sugeridos apenas após decisão sobre banco de teste — SQLite in-memory ou container PG descartável).
 
 ## Riscos e mitigações atualizadas

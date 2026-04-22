@@ -73,6 +73,12 @@ Status: **MVP fechado**, pronto para piloto após `pnpm install` + migrations + 
 - Bloqueia request sem perfil (`SEM_PERFIL`) e perfil fora da lista (`PERFIL_INSUFICIENTE`).
 - Libera combinações admin/rh e bloqueia gestor em rota restrita a admin.
 
+`apps/api/src/modules/evidencias/evidencias.controller.spec.ts` — 7 casos:
+- Dono acessa própria evidência; colaborador é bloqueado acessando de outro.
+- Admin vê qualquer evidência.
+- Rejeita path traversal (`A/../B/...`), path profundo, path sem pasta e path vazio.
+- Clampa `seconds` ao intervalo [60, 3600].
+
 Falta: testes de integração end-to-end (sugeridos apenas após decisão sobre banco de teste — SQLite in-memory ou container PG descartável).
 
 ## Riscos e mitigações atualizadas

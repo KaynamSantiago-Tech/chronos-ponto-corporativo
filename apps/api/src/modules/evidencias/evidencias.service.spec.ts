@@ -127,8 +127,8 @@ describe("EvidenciasService.upload — construção do path", () => {
     await service.upload("colab-1", file);
     await service.upload("colab-1", file);
 
-    const [pathA] = storage.upload.mock.calls[0];
-    const [pathB] = storage.upload.mock.calls[1];
+    const [pathA] = storage.upload.mock.calls[0]!;
+    const [pathB] = storage.upload.mock.calls[1]!;
     expect(pathA).not.toBe(pathB);
   });
 });

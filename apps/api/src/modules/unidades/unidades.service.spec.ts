@@ -29,7 +29,7 @@ describe("UnidadesService", () => {
     const findMany = vi.fn().mockResolvedValue([]);
     const { service } = build({ findMany });
     await service.listar(1, 25);
-    expect(findMany.mock.calls[0][0]).toMatchObject({
+    expect(findMany.mock.calls[0]![0]).toMatchObject({
       skip: 0,
       take: 25,
       orderBy: { nome: "asc" },

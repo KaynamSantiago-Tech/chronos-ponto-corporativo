@@ -4,6 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 import type { Request } from "express";
 import { Observable, tap } from "rxjs";
 

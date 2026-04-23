@@ -25,7 +25,7 @@ function build(opts: Partial<StorageMock> = {}) {
 
   const config = {
     get: vi.fn().mockReturnValue("evidencias"),
-  } as unknown as ConfigService<never, true>;
+  } as unknown as ConfigService<Env, true>;
 
   return {
     service: new EvidenciasService(supabase, config),

@@ -98,7 +98,7 @@ describe("MarcacoesService.registrarManual", () => {
     );
 
     expect(create).toHaveBeenCalledOnce();
-    const args = create.mock.calls[0][0].data;
+    const args = create.mock.calls[0]![0].data;
     expect(args.origem).toBe("manual");
     expect(args.colaborador_id).toBe("c1");
     expect(args.observacao).toContain("[manual por ator-1]");
@@ -119,7 +119,7 @@ describe("MarcacoesService.registrarManual", () => {
       {},
     );
 
-    const data = create.mock.calls[0][0].data;
+    const data = create.mock.calls[0]![0].data;
     expect(data.registrada_em.toISOString()).toBe(new Date(iso).toISOString());
   });
 
@@ -179,7 +179,7 @@ describe("MarcacoesService.registrar (happy path)", () => {
     );
 
     expect(create).toHaveBeenCalledOnce();
-    const data = create.mock.calls[0][0].data;
+    const data = create.mock.calls[0]![0].data;
     expect(data.colaborador_id).toBe("colab-1");
     expect(data.tipo).toBe("entrada");
     expect(data.origem).toBe("web");
@@ -199,7 +199,7 @@ describe("MarcacoesService.registrar (happy path)", () => {
     });
 
     await service.registrar("colab-1", { tipo: "entrada" }, {});
-    const data = create.mock.calls[0][0].data;
+    const data = create.mock.calls[0]![0].data;
     expect(data.latitude).toBeNull();
     expect(data.longitude).toBeNull();
     expect(data.precisao_m).toBeNull();

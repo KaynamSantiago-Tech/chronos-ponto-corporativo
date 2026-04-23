@@ -31,14 +31,14 @@ describe("SetoresService.listar", () => {
     const count = vi.fn().mockResolvedValue(0);
     const { service } = build({ findMany, count });
     await service.listar(1, 10);
-    expect(findMany.mock.calls[0][0].where).toEqual({});
+    expect(findMany.mock.calls[0]![0].where).toEqual({});
   });
 
   it("com unidade_id filtra por unidade", async () => {
     const findMany = vi.fn().mockResolvedValue([]);
     const { service } = build({ findMany });
     await service.listar(1, 10, "u1");
-    expect(findMany.mock.calls[0][0].where).toEqual({ unidade_id: "u1" });
+    expect(findMany.mock.calls[0]![0].where).toEqual({ unidade_id: "u1" });
   });
 
   it("achata o include unidade em unidade_nome no item retornado", async () => {

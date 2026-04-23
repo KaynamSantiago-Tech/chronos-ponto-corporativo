@@ -46,7 +46,7 @@ const DTO_BASE = {
   nome: "Bob",
   email: "bob@midrah.com.br",
   cpf: "111.111.111-11",
-  perfil: "colaborador",
+  perfil: "colaborador" as Perfil,
   cargo_id: "c1",
   setor_id: "s1",
   unidade_id: "u1",

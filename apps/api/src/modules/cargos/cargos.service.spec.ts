@@ -31,7 +31,7 @@ describe("CargosService", () => {
     const count = vi.fn().mockResolvedValue(1);
     const { service } = build({ findMany, count });
     const res = await service.listar(2, 10);
-    expect(findMany.mock.calls[0][0]).toMatchObject({
+    expect(findMany.mock.calls[0]![0]).toMatchObject({
       skip: 10,
       take: 10,
       orderBy: { nome: "asc" },

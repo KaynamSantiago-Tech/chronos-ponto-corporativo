@@ -47,7 +47,7 @@ export class AuditLogInterceptor implements NestInterceptor {
 
   private extractEntidade(path: string): string | null {
     const m = path.match(/^\/([a-z-]+)/i);
-    return m ? m[1] : null;
+    return m?.[1] ?? null;
   }
 
   private safePayload(body: unknown, depth = 0): object | null {

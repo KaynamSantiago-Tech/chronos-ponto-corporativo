@@ -35,7 +35,7 @@ export class AuditLogInterceptor implements NestInterceptor {
               entidade: this.extractEntidade(req.path),
               ip: req.ip ?? null,
               user_agent: req.headers["user-agent"] ?? null,
-              payload: this.safePayload(req.body),
+              payload: this.safePayload(req.body) ?? Prisma.JsonNull,
             },
           })
           .catch(() => {

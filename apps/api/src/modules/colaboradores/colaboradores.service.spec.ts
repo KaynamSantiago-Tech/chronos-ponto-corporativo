@@ -56,7 +56,7 @@ describe("ColaboradoresService.listar (busca)", () => {
     const findMany = vi.fn().mockResolvedValue([]);
     const { service } = build({ findMany });
     await service.listar(1, 50, {});
-    const where = findMany.mock.calls[0][0].where;
+    const where = findMany.mock.calls[0]![0].where;
     expect(where.OR).toBeUndefined();
     expect(where.deleted_at).toBeNull();
   });
@@ -65,7 +65,7 @@ describe("ColaboradoresService.listar (busca)", () => {
     const findMany = vi.fn().mockResolvedValue([]);
     const { service } = build({ findMany });
     await service.listar(1, 50, { busca: "ALI" });
-    const where = findMany.mock.calls[0][0].where;
+    const where = findMany.mock.calls[0]![0].where;
     expect(where.OR).toEqual([
       { nome: { contains: "ALI", mode: "insensitive" } },
       { matricula: { contains: "ALI", mode: "insensitive" } },
@@ -77,7 +77,7 @@ describe("ColaboradoresService.listar (busca)", () => {
     const findMany = vi.fn().mockResolvedValue([]);
     const { service } = build({ findMany });
     await service.listar(1, 50, { busca: "   " });
-    const where = findMany.mock.calls[0][0].where;
+    const where = findMany.mock.calls[0]![0].where;
     expect(where.OR).toBeUndefined();
   });
 });

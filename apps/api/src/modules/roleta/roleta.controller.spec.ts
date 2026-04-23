@@ -3,6 +3,7 @@ import type { ConfigService } from "@nestjs/config";
 import { createHmac } from "crypto";
 import { describe, expect, it, vi } from "vitest";
 
+import type { Env } from "../../config/env.schema";
 import { RoletaController } from "./roleta.controller";
 
 const SECRET = "segredo-de-teste";
@@ -10,7 +11,7 @@ const SECRET = "segredo-de-teste";
 function makeController(secret: string | undefined = SECRET) {
   const config = {
     get: vi.fn().mockReturnValue(secret),
-  } as unknown as ConfigService;
+  } as unknown as ConfigService<Env, true>;
   return new RoletaController(config);
 }
 

@@ -2,6 +2,7 @@ import { ConflictException, NotFoundException } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { describe, expect, it, vi } from "vitest";
 
+import type { Perfil } from "../../common/decorators/roles.decorator";
 import type { SupabaseAdminService } from "../../common/supabase/supabase-admin.service";
 import type { PrismaService } from "../../prisma/prisma.service";
 import { ColaboradoresService } from "./colaboradores.service";

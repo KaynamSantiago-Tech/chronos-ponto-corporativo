@@ -20,8 +20,12 @@ export class SupabaseJwtService {
   private readonly issuer: string;
 
   constructor(private readonly config: ConfigService<Env, true>) {
+    const jwksUri = this.config.get("SUPABASE_JWKS_URL", { infer: true });
+    if (!jwksUri) {
+      throw new Error("SUPABASE_JWKS_URL não configurado");
+    }
     this.jwks = jwksRsa({
-      jwksUri: this.config.get("SUPABASE_JWKS_URL", { infer: true }),
+      jwksUri,
       cache: true,
       cacheMaxEntries: 5,
       cacheMaxAge: 10 * 60 * 1000,

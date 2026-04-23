@@ -39,7 +39,7 @@ describe("RoletaController.webhook", () => {
   it("rejeita quando o secret não está configurado", () => {
     const config = {
       get: vi.fn().mockReturnValue(undefined),
-    } as unknown as ConfigService;
+    } as unknown as ConfigService<Env, true>;
     const controller = new RoletaController(config);
     expect(() => controller.webhook("qualquer", {})).toThrow(BadRequestException);
     try {

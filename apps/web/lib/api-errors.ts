@@ -1,5 +1,14 @@
 import { ApiRequestError } from "@/lib/api";
 
+/** Rótulo humano para cada tipo de marcação. */
+const TIPO_LABEL: Record<string, string> = {
+  none: "nenhuma marcação",
+  entrada: "Entrada",
+  saida: "Saída",
+  pausa_inicio: "Iniciar pausa",
+  pausa_fim: "Retornar da pausa",
+};
+
 /**
  * Títulos e descrições amigáveis para códigos de erro retornados pela API.
  * Quando o `code` não tem mapa, usa a `message` original do backend.

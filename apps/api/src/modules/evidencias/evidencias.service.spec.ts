@@ -3,6 +3,7 @@ import type { ConfigService } from "@nestjs/config";
 import { describe, expect, it, vi } from "vitest";
 
 import type { SupabaseAdminService } from "../../common/supabase/supabase-admin.service";
+import type { Env } from "../../config/env.schema";
 import { EvidenciasService } from "./evidencias.service";
 
 type StorageMock = {

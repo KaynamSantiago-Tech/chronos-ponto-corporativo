@@ -77,7 +77,8 @@ function LoginForm() {
       return;
     }
 
-    const destino = searchParams.get("redirecionar") || "/dashboard";
+    const redirecionar = searchParams.get("redirecionar");
+    const destino = redirecionar && redirecionar !== "/" ? redirecionar : "/dashboard";
     toast.success("Bem-vindo(a)!", "Sessão iniciada com sucesso.");
     router.replace(destino);
     router.refresh();

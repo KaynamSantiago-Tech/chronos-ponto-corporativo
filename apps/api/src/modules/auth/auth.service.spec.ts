@@ -64,7 +64,6 @@ function build(opts: BuildOpts = {}) {
     },
   } as unknown as PrismaService;
 
-  // @ts-expect-error — injeção manual do mock
   return { service: new AuthService(prisma, jwt), prisma, jwt };
 }
 

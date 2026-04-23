@@ -3,7 +3,7 @@ builder = "NIXPACKS"
 buildCommand = "pnpm install --frozen-lockfile && pnpm --filter @midrah/shared build && pnpm --filter @midrah/api exec prisma generate && pnpm --filter @midrah/api build"
 
 [deploy]
-startCommand = "pnpm --filter @midrah/api exec prisma migrate deploy && pnpm --filter @midrah/api start"
+startCommand = "pnpm --filter @midrah/api exec prisma migrate deploy && ls -la /app/apps/api && echo '--- dist ---' && (ls -la /app/apps/api/dist 2>&1 || true) && find /app -name 'main.js' -type f 2>/dev/null | head -20 && node /app/apps/api/dist/main.js"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 healthcheckPath = "/health"

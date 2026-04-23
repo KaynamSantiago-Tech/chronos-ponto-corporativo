@@ -228,7 +228,7 @@ describe("MarcacoesService.listar (escopo)", () => {
       { setor_id: "outro-setor" },
       { perfil: "gestor", setor_id: "setor-dele" },
     );
-    const where = findMany.mock.calls[0][0].where;
+    const where = findMany.mock.calls[0]![0].where;
     expect(where.colaborador.setor_id).toBe("setor-dele");
   });
 
@@ -240,14 +240,14 @@ describe("MarcacoesService.listar (escopo)", () => {
       { setor_id: "setor-query" },
       { perfil: "admin", setor_id: "setor-admin" },
     );
-    const where = findMany.mock.calls[0][0].where;
+    const where = findMany.mock.calls[0]![0].where;
     expect(where.colaborador.setor_id).toBe("setor-query");
   });
 
   it("admin sem filtro de setor não adiciona filtro de colaborador", async () => {
     const { service, findMany } = makeListar();
     await service.listar(1, 50, {}, { perfil: "admin", setor_id: "x" });
-    const where = findMany.mock.calls[0][0].where;
+    const where = findMany.mock.calls[0]![0].where;
     expect(where.colaborador).toBeUndefined();
   });
 });

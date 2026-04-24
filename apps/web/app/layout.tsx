@@ -6,8 +6,8 @@ import Providers from "./providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Midrah Ponto",
-  description: "Sistema interno de registro de ponto da Midrah.",
+  title: "Veltime",
+  description: "Sistema de registro de ponto Veltime.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

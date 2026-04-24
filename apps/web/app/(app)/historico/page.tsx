@@ -19,6 +19,7 @@ import { apiFetch } from "@/lib/api";
 import { formatarErroApi } from "@/lib/api-errors";
 import { baixarCsv, gerarCsv } from "@/lib/csv";
 import { formatDateTimePtBr } from "@/lib/format";
+import { baixarXlsx, type XlsxColumn } from "@/lib/xlsx";
 
 const TIPO_LABEL: Record<TipoMarcacao, string> = {
   entrada: "Entrada",

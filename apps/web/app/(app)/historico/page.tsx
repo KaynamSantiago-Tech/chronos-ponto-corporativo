@@ -154,7 +154,21 @@ export default function HistoricoPage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={exportarCsv}
+              onClick={() => exportar("xlsx")}
+              disabled={exportando || total === 0}
+              title="Exportar para Excel (.xlsx)"
+            >
+              {exportando ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              Excel
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportar("csv")}
               disabled={exportando || total === 0}
               title="Exportar para CSV"
             >
@@ -163,7 +177,7 @@ export default function HistoricoPage() {
               ) : (
                 <Download className="h-4 w-4" />
               )}
-              Exportar
+              CSV
             </Button>
           </div>
         </CardHeader>

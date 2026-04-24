@@ -214,10 +214,12 @@ export default function HistoricoPage() {
                       </TableCell>
                       <TableCell>{TIPO_LABEL[m.tipo] ?? m.tipo}</TableCell>
                       <TableCell className="capitalize">{m.origem}</TableCell>
-                      <TableCell className="font-mono text-xs">
-                        {m.latitude != null && m.longitude != null
-                          ? `${Number(m.latitude).toFixed(5)}, ${Number(m.longitude).toFixed(5)}`
-                          : "—"}
+                      <TableCell>
+                        <LocalizacaoDisplay
+                          latitude={m.latitude != null ? Number(m.latitude) : null}
+                          longitude={m.longitude != null ? Number(m.longitude) : null}
+                          precisao_m={m.precisao_m}
+                        />
                       </TableCell>
                       <TableCell className="text-right">
                         {m.evidencia_url ? (

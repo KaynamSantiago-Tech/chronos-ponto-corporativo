@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 
 import { SelfiePreviewButton } from "@/components/admin/selfie-preview-button";
+import { LocalizacaoDisplay } from "@/components/localizacao-display";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";

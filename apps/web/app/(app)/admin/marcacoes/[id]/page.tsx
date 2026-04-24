@@ -2,7 +2,7 @@
 
 import type { Marcacao, TipoMarcacao } from "@midrah/shared";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ExternalLink, MapPin } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 

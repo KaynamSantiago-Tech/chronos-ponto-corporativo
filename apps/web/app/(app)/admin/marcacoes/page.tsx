@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { MarcacaoManualDialog } from "@/components/admin/marcacao-manual-dialog";
 import { SelfiePreviewButton } from "@/components/admin/selfie-preview-button";
+import { LocalizacaoDisplay } from "@/components/localizacao-display";
 import { PermissionGate } from "@/components/permission-gate";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

@@ -1,8 +1,8 @@
 [
-  {"nome":"Financeiro","descricao":"Área financeira"},
-  {"nome":"RH","descricao":"Recursos humanos"},
-  {"nome":"Tecnologia","descricao":"Tecnologia da informação"},
-  {"nome":"Marketing","descricao":"Marketing e comunicação"},
-  {"nome":"Executivo","descricao":"Diretoria executiva"},
-  {"nome":"Rampagem","descricao":"Equipe de rampagem"}
+  {"id":"a1111111-0000-0000-0000-000000000001","nome":"Financeiro","descricao":"Área financeira"},
+  {"id":"a1111111-0000-0000-0000-000000000002","nome":"RH","descricao":"Recursos humanos"},
+  {"id":"a1111111-0000-0000-0000-000000000003","nome":"Tecnologia","descricao":"Tecnologia da informação"},
+  {"id":"a1111111-0000-0000-0000-000000000004","nome":"Marketing","descricao":"Marketing e comunicação"},
+  {"id":"a1111111-0000-0000-0000-000000000005","nome":"Executivo","descricao":"Diretoria executiva"},
+  {"id":"a1111111-0000-0000-0000-000000000006","nome":"Rampagem","descricao":"Equipe de rampagem"}
 ]

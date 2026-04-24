@@ -38,8 +38,8 @@ export default function HistoricoPage() {
   const [exportando, setExportando] = useState(false);
 
   const filtrosIso = {
-    inicio: inicio ? new Date(inicio).toISOString() : undefined,
-    fim: fim ? new Date(fim).toISOString() : undefined,
+    inicio: inicio ? new Date(`${inicio}T00:00:00`).toISOString() : undefined,
+    fim: fim ? new Date(`${fim}T23:59:59.999`).toISOString() : undefined,
   } as const;
 
   const { data, isLoading, isError, error, refetch, isFetching } = useMarcacoesMe({

@@ -104,7 +104,7 @@ export default function Sidebar({ aberto = false, onFechar }: SidebarProps) {
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <Clock4 className="h-4 w-4" />
           </div>
-          <div className="text-sm font-semibold">Midrah Ponto</div>
+          <div className="text-sm font-semibold">Veltime</div>
         </div>
         <button
           type="button"

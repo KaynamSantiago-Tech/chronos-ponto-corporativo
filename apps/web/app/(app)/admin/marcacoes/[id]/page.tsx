@@ -111,9 +111,6 @@ export default function MarcacaoDetalhePage() {
                   precisao_m={data.precisao_m}
                 />
               </Info>
-              <Info label="Precisão GPS">
-                {data.precisao_m != null ? `~${Math.round(data.precisao_m)} m` : "—"}
-              </Info>
               <Info label="IP">{data.ip ?? "—"}</Info>
               <Info label="User-Agent">
                 <span className="break-all text-xs text-muted-foreground">

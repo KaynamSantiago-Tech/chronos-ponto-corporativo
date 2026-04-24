@@ -91,7 +91,7 @@ function LoginForm() {
           <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Clock4 className="h-5 w-5" />
           </div>
-          <CardTitle className="text-2xl">Midrah Ponto</CardTitle>
+          <CardTitle className="text-2xl">Veltime</CardTitle>
           <CardDescription>Entre com seu email corporativo.</CardDescription>
         </CardHeader>
         <CardContent>

@@ -134,8 +134,8 @@ export default function AdminMarcacoesPage() {
   ]);
 
   const filtrosIso = {
-    inicio: inicio ? new Date(inicio).toISOString() : undefined,
-    fim: fim ? new Date(fim).toISOString() : undefined,
+    inicio: inicio ? new Date(`${inicio}T00:00:00`).toISOString() : undefined,
+    fim: fim ? new Date(`${fim}T23:59:59.999`).toISOString() : undefined,
     colaborador_id: colaboradorId || undefined,
     unidade_id: unidadeId || undefined,
     setor_id: setorId || undefined,

@@ -48,7 +48,7 @@ export default function HistoricoPage() {
     ...filtrosIso,
   });
 
-  async function exportarCsv() {
+  async function exportar(formato: "csv" | "xlsx") {
     setExportando(true);
     try {
       const response = await apiFetch<Paginated<Marcacao>>("/marcacoes/me", {
@@ -64,17 +64,31 @@ export default function HistoricoPage() {
           `Mostrando primeiros ${LIMITE_EXPORT} de ${response.total} registros. Refine o filtro.`,
         );
       }
-      const csv = gerarCsv(response.items, [
-        { header: "Data/hora", value: (m) => formatDateTimePtBr(m.registrada_em) },
-        { header: "Tipo", value: (m) => TIPO_LABEL[m.tipo] ?? m.tipo },
-        { header: "Origem", value: (m) => m.origem },
-        { header: "Latitude", value: (m) => (m.latitude != null ? Number(m.latitude) : "") },
-        { header: "Longitude", value: (m) => (m.longitude != null ? Number(m.longitude) : "") },
-        { header: "Precisao (m)", value: (m) => m.precisao_m ?? "" },
-        { header: "Observacao", value: (m) => m.observacao ?? "" },
-      ]);
       const hoje = new Date().toISOString().slice(0, 10);
-      baixarCsv(`meu_historico_${hoje}`, csv);
+      const nomeBase = `meu_historico_${hoje}`;
+      if (formato === "csv") {
+        const csv = gerarCsv(response.items, [
+          { header: "Data/hora", value: (m) => formatDateTimePtBr(m.registrada_em) },
+          { header: "Tipo", value: (m) => TIPO_LABEL[m.tipo] ?? m.tipo },
+          { header: "Origem", value: (m) => m.origem },
+          { header: "Latitude", value: (m) => (m.latitude != null ? Number(m.latitude) : "") },
+          { header: "Longitude", value: (m) => (m.longitude != null ? Number(m.longitude) : "") },
+          { header: "Precisao (m)", value: (m) => m.precisao_m ?? "" },
+          { header: "Observacao", value: (m) => m.observacao ?? "" },
+        ]);
+        baixarCsv(nomeBase, csv);
+      } else {
+        const colunas: XlsxColumn<Marcacao>[] = [
+          { header: "Data/hora", value: (m) => formatDateTimePtBr(m.registrada_em) },
+          { header: "Tipo", value: (m) => TIPO_LABEL[m.tipo] ?? m.tipo },
+          { header: "Origem", value: (m) => m.origem },
+          { header: "Latitude", value: (m) => (m.latitude != null ? Number(m.latitude) : "") },
+          { header: "Longitude", value: (m) => (m.longitude != null ? Number(m.longitude) : "") },
+          { header: "Precisão (m)", value: (m) => m.precisao_m ?? "" },
+          { header: "Observação", value: (m) => m.observacao ?? "" },
+        ];
+        baixarXlsx(nomeBase, response.items, colunas, "Meu histórico");
+      }
       toast.success("Export concluído", `${response.items.length} registros exportados.`);
     } catch (err) {
       const amigavel = formatarErroApi(err, "Falha ao exportar histórico");

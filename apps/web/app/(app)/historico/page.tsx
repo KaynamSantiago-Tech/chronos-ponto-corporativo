@@ -5,6 +5,7 @@ import { Download, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 import { SelfiePreviewButton } from "@/components/admin/selfie-preview-button";
+import { LocalizacaoDisplay } from "@/components/localizacao-display";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";

@@ -1,0 +1,8 @@
+[
+  {"nome":"Financeiro","descricao":"Área financeira"},
+  {"nome":"RH","descricao":"Recursos humanos"},
+  {"nome":"Tecnologia","descricao":"Tecnologia da informação"},
+  {"nome":"Marketing","descricao":"Marketing e comunicação"},
+  {"nome":"Executivo","descricao":"Diretoria executiva"},
+  {"nome":"Rampagem","descricao":"Equipe de rampagem"}
+]

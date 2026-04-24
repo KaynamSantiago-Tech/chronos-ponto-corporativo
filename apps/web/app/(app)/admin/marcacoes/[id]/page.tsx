@@ -103,23 +103,12 @@ export default function MarcacaoDetalhePage() {
               <Info label="Unidade">
                 {data.colaborador?.unidade?.nome ?? "—"}
               </Info>
-              <Info label="Coordenadas">
-                {data.latitude != null && data.longitude != null ? (
-                  <span className="flex items-center gap-2 font-mono text-xs">
-                    <MapPin className="h-3 w-3" />
-                    {Number(data.latitude).toFixed(6)}, {Number(data.longitude).toFixed(6)}
-                    <a
-                      href={`https://www.google.com/maps?q=${data.latitude},${data.longitude}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-primary hover:underline"
-                    >
-                      Mapa <ExternalLink className="h-3 w-3" />
-                    </a>
-                  </span>
-                ) : (
-                  "—"
-                )}
+              <Info label="Localização">
+                <LocalizacaoDisplay
+                  latitude={data.latitude != null ? Number(data.latitude) : null}
+                  longitude={data.longitude != null ? Number(data.longitude) : null}
+                  precisao_m={data.precisao_m}
+                />
               </Info>
               <Info label="Precisão GPS">
                 {data.precisao_m != null ? `~${Math.round(data.precisao_m)} m` : "—"}

@@ -138,6 +138,19 @@ export function formatarErroApi(
         descricao: "Aguarde alguns segundos antes de tentar novamente.",
       };
     }
+    if (erro.code === "SEQUENCIA_INVALIDA") {
+      const det = erro.details as { ultimo?: string; proximas?: string[] } | undefined;
+      const ultimo = TIPO_LABEL[det?.ultimo ?? "none"] ?? det?.ultimo ?? "desconhecida";
+      const proximas = (det?.proximas ?? [])
+        .map((t) => TIPO_LABEL[t] ?? t)
+        .join(" ou ");
+      return {
+        titulo: "Sequência inválida",
+        descricao: proximas
+          ? `Sua última marcação hoje foi "${ultimo}". Próxima válida: ${proximas}.`
+          : `Você já registrou "${ultimo}" hoje. Aguarde o próximo dia.`,
+      };
+    }
     const map = erro.code ? MAPA_CODIGOS[erro.code] : undefined;
     if (map) {
       return { titulo: map.titulo, descricao: map.descricao ?? erro.message };
